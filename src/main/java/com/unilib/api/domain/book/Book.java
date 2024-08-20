@@ -24,19 +24,11 @@ public class Book {
     private UUID id;
 
     private String title;
-
     private String description;
-
     private Boolean available;
-
     private String image;
-
     private String pdf;
-
     private Boolean hasEbook;
-
     private Date createdAt;
-
     private Date updatedAt;
-
 }

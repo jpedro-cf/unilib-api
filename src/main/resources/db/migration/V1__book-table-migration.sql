@@ -1,0 +1,27 @@
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+CREATE TABLE book (
+    id UUID PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    available BOOLEAN NOT NULL,
+    description TEXT,
+    image VARCHAR(255),
+    pdf VARCHAR(255),
+    has_ebook BOOLEAN NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE OR REPLACE FUNCTION update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON book
+FOR EACH ROW
+EXECUTE FUNCTION update_timestamp();
