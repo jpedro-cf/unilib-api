@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.UUID;
 
 public interface BooksRepository extends JpaRepository<Book, UUID> {
+    // Vai ter filtro por categoria futuramente
     @Query("SELECT b FROM Book b " +
             "WHERE (:title = '' OR b.title LIKE %:title%)")
     Page<Book> findFilteredBooks(@Param("title") String title, Pageable pageable);
