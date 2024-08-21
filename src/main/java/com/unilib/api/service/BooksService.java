@@ -52,7 +52,7 @@ public class BooksService {
     }
     public Book getByID(UUID id){
         return this.repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
 
     }
     public List<BookResponseDTO> getBooks(String title, String sort, int page, int size){
@@ -80,8 +80,8 @@ public class BooksService {
         )).stream().toList();
     }
 
-    public Void deleteBook(UUID eventID){
-        this.repository.delete(this.repository.findById(eventID)
+    public Void deleteBook(UUID bookId){
+        this.repository.delete(this.repository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException("Book not found")));
 
        return null;
