@@ -3,7 +3,9 @@ package com.unilib.api.service;
 import com.unilib.api.domain.book.Book;
 import com.unilib.api.domain.book.BookRequestDTO;
 import com.unilib.api.domain.book.BookResponseDTO;
+import com.unilib.api.domain.category.BooksCategory;
 import com.unilib.api.repositories.BooksRepository;
+import com.unilib.api.repositories.CategoriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,19 +14,20 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BooksService {
     @Autowired
     private BooksRepository repository;
 
+    @Autowired
+    private CategoriesRepository categoriesRepository;
+
     public Book createBook(BookRequestDTO data) {
         String imgUrl = null;
         String pdf = null;
+
 
         if(data.image() != null){
             imgUrl = this.uploadFile(data.image());
@@ -33,6 +36,7 @@ public class BooksService {
         if(data.pdf() != null){
             pdf = this.uploadFile(data.pdf());
         }
+
 
         Book newBook = new Book();
 
@@ -44,6 +48,16 @@ public class BooksService {
         newBook.setHasEbook(data.hasEbook());
         newBook.setCreatedAt(new Date());
         newBook.setUpdatedAt(new Date());
+
+        if (data.categories().isPresent()) {
+            List<UUID> categoryIds = data.categories().get();
+            List<BooksCategory> categories = this.categoriesRepository.findAllById(categoryIds);
+
+            // Transforma em Set<>
+            Set<BooksCategory> categoriesSet = new HashSet<>(categories);
+
+            newBook.setCategories(categoriesSet);
+        }
 
         this.repository.save(newBook);
 

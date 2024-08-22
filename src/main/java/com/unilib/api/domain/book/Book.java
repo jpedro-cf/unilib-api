@@ -1,6 +1,5 @@
 package com.unilib.api.domain.book;
-
-import com.unilib.api.domain.category.Category;
+import com.unilib.api.domain.category.BooksCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +8,7 @@ import lombok.Setter;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Table(name = "book")
@@ -33,9 +33,9 @@ public class Book {
 
     @ManyToMany
     @JoinTable(
-            name = "book_category",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
+            name = "book_category_mapping", // Name of the join table
+            joinColumns = @JoinColumn(name = "book_id"), // Foreign key for Book in join table
+            inverseJoinColumns = @JoinColumn(name = "category_id") // Foreign key for Category in join table
     )
-    private List<Category> categories;
+    private Set<BooksCategory> categories;
 }

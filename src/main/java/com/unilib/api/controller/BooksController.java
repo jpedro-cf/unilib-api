@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -24,10 +25,14 @@ public class BooksController {
                                        @RequestParam("available") String available,
                                        @RequestParam("image") MultipartFile image,
                                        @RequestParam("pdf") MultipartFile pdf,
-                                       @RequestParam("hasEbook") String hasEbook
+                                       @RequestParam("hasEbook") String hasEbook,
+                                       @RequestParam(value = "categories", required = false) List<UUID> categories
                                        ){
-        BookRequestDTO bookRequestDTO = new BookRequestDTO(title, description, Boolean.valueOf(available), image, pdf, Boolean.valueOf(hasEbook));
+        Optional<List<UUID>> optionalCategories = Optional.of(categories);
+
+        BookRequestDTO bookRequestDTO = new BookRequestDTO(title, description, Boolean.valueOf(available), image, pdf, Boolean.valueOf(hasEbook), optionalCategories);
         Book newBook = this.booksService.createBook(bookRequestDTO);
+
         return ResponseEntity.ok(newBook);
     }
 
