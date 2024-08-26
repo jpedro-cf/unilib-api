@@ -26,11 +26,10 @@ public class BooksController {
                                        @RequestParam("image") MultipartFile image,
                                        @RequestParam("pdf") MultipartFile pdf,
                                        @RequestParam("hasEbook") String hasEbook,
-                                       @RequestParam(value = "categories", required = false) List<UUID> categories
+                                       @RequestParam(value = "categories", required = false) Optional<List<UUID>> categories
                                        ){
-        Optional<List<UUID>> optionalCategories = Optional.of(categories);
 
-        BookRequestDTO bookRequestDTO = new BookRequestDTO(title, description, Boolean.valueOf(available), image, pdf, Boolean.valueOf(hasEbook), optionalCategories);
+        BookRequestDTO bookRequestDTO = new BookRequestDTO(title, description, Boolean.valueOf(available), image, pdf, Boolean.valueOf(hasEbook), categories);
         Book newBook = this.booksService.createBook(bookRequestDTO);
 
         return ResponseEntity.ok(newBook);

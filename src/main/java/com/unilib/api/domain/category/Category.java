@@ -11,13 +11,13 @@ import lombok.Setter;
 import java.util.Set;
 import java.util.UUID;
 
-@Table(name = "books_category")
+@Table(name = "category")
 @Entity
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BooksCategory {
+public class Category {
     @Id
     @GeneratedValue
     private UUID id;

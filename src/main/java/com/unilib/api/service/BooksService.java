@@ -3,7 +3,7 @@ package com.unilib.api.service;
 import com.unilib.api.domain.book.Book;
 import com.unilib.api.domain.book.BookRequestDTO;
 import com.unilib.api.domain.book.BookResponseDTO;
-import com.unilib.api.domain.category.BooksCategory;
+import com.unilib.api.domain.category.Category;
 import com.unilib.api.repositories.BooksRepository;
 import com.unilib.api.repositories.CategoriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +51,10 @@ public class BooksService {
 
         if (data.categories().isPresent()) {
             List<UUID> categoryIds = data.categories().get();
-            List<BooksCategory> categories = this.categoriesRepository.findAllById(categoryIds);
+            List<Category> categories = this.categoriesRepository.findAllById(categoryIds);
 
             // Transforma em Set<>
-            Set<BooksCategory> categoriesSet = new HashSet<>(categories);
+            Set<Category> categoriesSet = new HashSet<>(categories);
 
             newBook.setCategories(categoriesSet);
         }
@@ -89,6 +89,7 @@ public class BooksService {
                 book.getImage(),
                 book.getPdf(),
                 book.getHasEbook(),
+                book.getCategories(),
                 book.getCreatedAt(),
                 book.getUpdatedAt()
         )).stream().toList();
