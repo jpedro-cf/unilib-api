@@ -57,9 +57,11 @@ public class AuthService implements UserDetailsService {
         var usernamePassword = new UsernamePasswordAuthenticationToken(request.email(), request.password());
 
         var auth = this.authenticationManager.authenticate(usernamePassword);
-        var token = this.tokenService.generateToken((User) auth.getPrincipal());
 
-        return new LoginResponseDTO(token);
+        var accessToken = this.tokenService.generateAccessToken((User) auth.getPrincipal());
+        var refreshToken = this.tokenService.generateRefreshToken((User) auth.getPrincipal());
+
+        return new LoginResponseDTO(accessToken, refreshToken);
     }
 
 

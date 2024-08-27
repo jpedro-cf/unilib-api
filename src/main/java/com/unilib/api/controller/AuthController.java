@@ -5,6 +5,8 @@ import com.unilib.api.domain.user.LoginResponseDTO;
 import com.unilib.api.domain.user.RegisterRequestDTO;
 import com.unilib.api.domain.user.User;
 import com.unilib.api.service.AuthService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +21,15 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request){
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request, HttpServletResponse httpResponse){
         LoginResponseDTO response = this.authService.login(request);
+
+        Cookie refreshTokenCookie = new Cookie("refresh_token", response.refreshToken());
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true); // True se estiver usando HTTPS
+        refreshTokenCookie.setPath("/api/refresh-token"); // Defina o caminho apropriado
+        refreshTokenCookie.setMaxAge(30 * 24 * 60 * 60); // Exemplo: 30 dias
+        httpResponse.addCookie(refreshTokenCookie);
 
         return ResponseEntity.ok(response);
     }
@@ -31,4 +40,5 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
     }
+
 }
