@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("books")
 public class BooksController {
     @Autowired
     private BooksService booksService;
@@ -22,14 +22,12 @@ public class BooksController {
     @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Book> create(@RequestParam("title") String title,
                                        @RequestParam("description") String description,
-                                       @RequestParam("available") String available,
                                        @RequestParam("image") MultipartFile image,
                                        @RequestParam("pdf") MultipartFile pdf,
-                                       @RequestParam("hasEbook") String hasEbook,
                                        @RequestParam(value = "categories", required = false) Optional<List<UUID>> categories
                                        ){
 
-        BookRequestDTO bookRequestDTO = new BookRequestDTO(title, description, Boolean.valueOf(available), image, pdf, Boolean.valueOf(hasEbook), categories);
+        BookRequestDTO bookRequestDTO = new BookRequestDTO(title, description, image, pdf, categories);
         Book newBook = this.booksService.createBook(bookRequestDTO);
 
         return ResponseEntity.ok(newBook);

@@ -1,7 +1,6 @@
 package com.unilib.api.service;
 
 
-import com.unilib.api.domain.book.Book;
 import com.unilib.api.domain.category.Category;
 import com.unilib.api.domain.category.CategoryRequestDTO;
 import com.unilib.api.repositories.CategoriesRepository;

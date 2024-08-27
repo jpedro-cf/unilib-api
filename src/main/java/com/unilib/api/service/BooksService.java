@@ -42,12 +42,9 @@ public class BooksService {
 
         newBook.setTitle(data.title());
         newBook.setDescription(data.description());
-        newBook.setAvailable(data.available());
         newBook.setImage(imgUrl);
         newBook.setPdf(pdf);
-        newBook.setHasEbook(data.hasEbook());
         newBook.setCreatedAt(new Date());
-        newBook.setUpdatedAt(new Date());
 
         if (data.categories().isPresent()) {
             List<UUID> categoryIds = data.categories().get();
@@ -81,17 +78,15 @@ public class BooksService {
 
         Page<Book> booksPage = this.repository.findFilteredBooks(title, pageable);
 
+        //Isso aq é pra no futuro retornar paginação (total_pages, total_items, etc)
         return booksPage.map(book -> new BookResponseDTO(
                 book.getId(),
                 book.getTitle(),
-                book.getAvailable(),
                 book.getDescription(),
                 book.getImage(),
                 book.getPdf(),
-                book.getHasEbook(),
                 book.getCategories(),
-                book.getCreatedAt(),
-                book.getUpdatedAt()
+                book.getCreatedAt()
         )).stream().toList();
     }
 

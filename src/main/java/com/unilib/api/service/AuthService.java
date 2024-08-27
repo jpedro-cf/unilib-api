@@ -1,42 +1,38 @@
 package com.unilib.api.service;
 
-import com.unilib.api.domain.role.Role;
-import com.unilib.api.domain.user.LoginRequestDTO;
-import com.unilib.api.domain.user.LoginResponseDTO;
-import com.unilib.api.domain.user.RegisterRequestDTO;
-import com.unilib.api.domain.user.User;
-import com.unilib.api.repositories.RolesRepository;
+import com.unilib.api.domain.user.*;
 import com.unilib.api.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
-public class AuthService {
+public class AuthService implements UserDetailsService {
+
     @Autowired
-    private JwtEncoder jwtEncoder;
+    private TokenService tokenService;
 
     @Autowired
     private UsersRepository usersRepository;
 
     @Autowired
-    private RolesRepository rolesRepository;
-
-    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    private final AuthenticationManager authenticationManager;
+
+    public AuthService(@Lazy AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
     public User register(RegisterRequestDTO request){
-        Role basicRole = this.rolesRepository.findByName(Role.Values.user.name());
 
         Optional<User> userFromDb = this.usersRepository.findByEmail(request.email());
 
@@ -49,7 +45,7 @@ public class AuthService {
         user.setName(request.name());
         user.setEmail(request.email());
         user.setPassword(this.passwordEncoder.encode(request.password()));
-        user.setRoles(Set.of(basicRole));
+        user.setRoles(Set.of(UserRole.USER.name()));
 
         this.usersRepository.save(user);
 
@@ -57,41 +53,19 @@ public class AuthService {
     }
 
 
-    public LoginResponseDTO login(LoginRequestDTO request){
-         Optional<User> user = this.usersRepository.findByEmail(request.email());
+    public LoginResponseDTO login(LoginRequestDTO request) {
+        var usernamePassword = new UsernamePasswordAuthenticationToken(request.email(), request.password());
 
-        if(!user.isPresent()){
-            throw new BadCredentialsException("user or password is invalid!");
-        }
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+        var token = this.tokenService.generateToken((User) auth.getPrincipal());
 
-        if(!this.isLoginCorrect(request, user.get().getPassword())){
-            throw new BadCredentialsException("user or password is invalid!");
-        }
-
-        var now = Instant.now();
-        var expiresIn = 300L;
-
-        var scopes = user.get().getRoles()
-                .stream()
-                .map(Role::getName)
-                .collect(Collectors.joining(" "));
-
-        var claims = JwtClaimsSet.builder()
-                .issuer("unilib-api")
-                .subject(user.get().getId().toString())
-                .issuedAt(now)
-                .expiresAt(now.plusSeconds(expiresIn))
-                .claim("scope", scopes)
-                .build();
-
-        var jwtValue = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
-        return new LoginResponseDTO(jwtValue, expiresIn);
+        return new LoginResponseDTO(token);
     }
 
-    private boolean isLoginCorrect(LoginRequestDTO request, String password) {
-        return this.passwordEncoder.matches(request.password(), password);
-    }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return this.usersRepository.findDetailsByEmail(username);
+    }
 
 }
