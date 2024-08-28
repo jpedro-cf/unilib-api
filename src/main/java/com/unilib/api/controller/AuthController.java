@@ -27,7 +27,7 @@ public class AuthController {
         Cookie refreshTokenCookie = new Cookie("refresh_token", response.refreshToken());
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(true); // True se estiver usando HTTPS
-        refreshTokenCookie.setPath("/api/refresh-token"); // Defina o caminho apropriado
+        refreshTokenCookie.setPath("/"); // Defina o caminho apropriado
         refreshTokenCookie.setMaxAge(30 * 24 * 60 * 60); // Exemplo: 30 dias
         httpResponse.addCookie(refreshTokenCookie);
 

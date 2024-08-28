@@ -61,7 +61,7 @@ public class AuthService implements UserDetailsService {
         var accessToken = this.tokenService.generateAccessToken((User) auth.getPrincipal());
         var refreshToken = this.tokenService.generateRefreshToken((User) auth.getPrincipal());
 
-        return new LoginResponseDTO(accessToken, refreshToken);
+        return new LoginResponseDTO((User) auth.getPrincipal() ,accessToken, refreshToken);
     }
 
 

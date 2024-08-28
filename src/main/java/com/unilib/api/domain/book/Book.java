@@ -1,5 +1,7 @@
 package com.unilib.api.domain.book;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.unilib.api.domain.category.Category;
+import com.unilib.api.domain.review.Review;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +29,11 @@ public class Book {
     private String pdf;
     private Date createdAt;
 
-    @ManyToMany
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)  // Configuração do relacionamento com Review
+    @JsonManagedReference
+    private Set<Review> reviews;  // Coleção de reviews associadas ao livro
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "book_category", // Name of the join table
             joinColumns = @JoinColumn(name = "book_id"), // Foreign key for Book in join table

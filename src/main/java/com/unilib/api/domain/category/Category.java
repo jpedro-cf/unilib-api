@@ -25,7 +25,4 @@ public class Category {
     private String title;
     private String description;
 
-    @ManyToMany(mappedBy = "categories")
-    @JsonIgnore
-    private Set<Book> books;
 }

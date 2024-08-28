@@ -85,6 +85,7 @@ public class BooksService {
                 book.getDescription(),
                 book.getImage(),
                 book.getPdf(),
+                book.getReviews(),
                 book.getCategories(),
                 book.getCreatedAt()
         )).stream().toList();

@@ -19,7 +19,7 @@ public class TokenService {
     private String secret;
 
     public String generateAccessToken(User user) {
-        return generateToken(user, 15 * 60 * 1000); // Exemplo: 15 minutos
+        return generateToken(user, 5 * 60 * 1000); // Exemplo: 5 minutos
     }
 
     public String generateRefreshToken(User user) {
