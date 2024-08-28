@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class ReviewsService {
@@ -54,5 +55,28 @@ public class ReviewsService {
         this.reviewsRepository.save(newReview);
 
         return newReview;
+    }
+
+    public Void delete(UUID id){
+        Optional<User> user = this.authService.getCurrentUser();
+
+        if(user.isEmpty()){
+            throw new UsernameNotFoundException("Current user not found");
+        }
+
+        Optional<Review> review = this.reviewsRepository.findById(id);
+
+        if(review.isEmpty()){
+            throw new IllegalArgumentException("Review not found");
+        }
+
+        if(review.get().getUser().getId() != user.get().getId()){
+            throw new UsernameNotFoundException("Only the user can delete his own review");
+        }
+
+        this.reviewsRepository.delete(review.get());
+
+        return null;
+
     }
 }

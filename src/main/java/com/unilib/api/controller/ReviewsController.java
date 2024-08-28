@@ -6,9 +6,9 @@ import com.unilib.api.service.ReviewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @Controller
 @RequestMapping("reviews")
@@ -21,5 +21,12 @@ public class ReviewsController {
         var review = this.reviewsService.create(request);
 
         return ResponseEntity.ok(review);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable UUID id){
+        this.reviewsService.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
