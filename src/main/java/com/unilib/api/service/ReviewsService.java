@@ -20,6 +20,9 @@ import java.util.Optional;
 @Service
 public class ReviewsService {
     @Autowired
+    private AuthService authService;
+
+    @Autowired
     private ReviewsRepository reviewsRepository;
 
     @Autowired
@@ -29,12 +32,7 @@ public class ReviewsService {
     private UsersRepository usersRepository;
 
     public Review create(ReviewRequestDTO request){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String email = userDetails.getUsername();
-
-        Optional<User> user = this.usersRepository.findByEmail(email);
+        Optional<User> user = this.authService.getCurrentUser();
 
         if(user.isEmpty()){
             throw new UsernameNotFoundException("User not found");

@@ -29,15 +29,15 @@ public class Book {
     private String pdf;
     private Date createdAt;
 
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)  // Configuração do relacionamento com Review
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private Set<Review> reviews;  // Coleção de reviews associadas ao livro
+    private Set<Review> reviews;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-            name = "book_category", // Name of the join table
-            joinColumns = @JoinColumn(name = "book_id"), // Foreign key for Book in join table
-            inverseJoinColumns = @JoinColumn(name = "category_id") // Foreign key for Category in join table
+            name = "book_category",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private Set<Category> categories;
 }
