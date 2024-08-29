@@ -24,10 +24,11 @@ public class BooksController {
                                        @RequestParam("description") String description,
                                        @RequestParam("image") MultipartFile image,
                                        @RequestParam("pdf") MultipartFile pdf,
-                                       @RequestParam(value = "categories", required = false) Optional<List<UUID>> categories
+                                       @RequestParam(value = "categories", required = false) Optional<List<UUID>> categories,
+                                       @RequestParam("company_id") UUID company_id
                                        ){
 
-        BookRequestDTO bookRequestDTO = new BookRequestDTO(title, description, image, pdf, categories);
+        BookRequestDTO bookRequestDTO = new BookRequestDTO(title, description, image, pdf, company_id, categories);
         Book newBook = this.booksService.createBook(bookRequestDTO);
 
         return ResponseEntity.ok(newBook);

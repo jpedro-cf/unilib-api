@@ -1,6 +1,7 @@
 package com.unilib.api.domain.book;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.unilib.api.domain.category.Category;
+import com.unilib.api.domain.company.Company;
 import com.unilib.api.domain.review.Review;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,10 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Set<Review> reviews;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(

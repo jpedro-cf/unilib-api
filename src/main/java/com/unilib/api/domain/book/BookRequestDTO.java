@@ -10,5 +10,6 @@ public record BookRequestDTO(String title,
                              String description,
                              MultipartFile image,
                              MultipartFile pdf,
+                             UUID company_id,
                              Optional<List<UUID>> categories
                              ){}

@@ -1,6 +1,7 @@
 package com.unilib.api.domain.book;
 
 import com.unilib.api.domain.category.Category;
+import com.unilib.api.domain.company.Company;
 import com.unilib.api.domain.review.Review;
 
 import java.util.Date;
@@ -12,6 +13,7 @@ public record BookResponseDTO(UUID id,
                               String description,
                               String image,
                               String pdf,
+                              Company company,
                               Set<Review> reviews,
                               Set<Category> categories,
                               Date createdAt

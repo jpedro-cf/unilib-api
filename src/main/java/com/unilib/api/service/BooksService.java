@@ -4,8 +4,10 @@ import com.unilib.api.domain.book.Book;
 import com.unilib.api.domain.book.BookRequestDTO;
 import com.unilib.api.domain.book.BookResponseDTO;
 import com.unilib.api.domain.category.Category;
+import com.unilib.api.domain.company.Company;
 import com.unilib.api.repositories.BooksRepository;
 import com.unilib.api.repositories.CategoriesRepository;
+import com.unilib.api.repositories.CompaniesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,9 @@ public class BooksService {
     @Autowired
     private CategoriesRepository categoriesRepository;
 
+    @Autowired
+    private CompaniesRepository companiesRepository;
+
     public Book createBook(BookRequestDTO data) {
         String imgUrl = null;
         String pdf = null;
@@ -38,12 +43,19 @@ public class BooksService {
         }
 
 
+        Optional<Company> company = this.companiesRepository.findById(data.company_id());
+
+        if(company.isEmpty()){
+            throw new IllegalArgumentException("Company not found");
+        }
+
         Book newBook = new Book();
 
         newBook.setTitle(data.title());
         newBook.setDescription(data.description());
         newBook.setImage(imgUrl);
         newBook.setPdf(pdf);
+        newBook.setCompany(company.get());
         newBook.setCreatedAt(new Date());
 
         if (data.categories().isPresent()) {
@@ -85,6 +97,7 @@ public class BooksService {
                 book.getDescription(),
                 book.getImage(),
                 book.getPdf(),
+                book.getCompany(),
                 book.getReviews(),
                 book.getCategories(),
                 book.getCreatedAt()
