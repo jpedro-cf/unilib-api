@@ -1,5 +1,6 @@
 package com.unilib.api.controller;
 
+import com.unilib.api.domain.group.AddGroupMembersDTO;
 import com.unilib.api.domain.group.Group;
 import com.unilib.api.domain.group.GroupRequestDTO;
 import com.unilib.api.service.GroupsService;
@@ -42,5 +43,19 @@ public class GroupsController {
         this.groupsService.delete(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/members")
+    public ResponseEntity<Group> addMember(@RequestBody AddGroupMembersDTO data){
+        Group added = this.groupsService.addMembers(data.id(), data.members());
+
+        return ResponseEntity.ok(added);
+    }
+
+    @DeleteMapping("/members")
+    public ResponseEntity<Group> removeMember(@RequestBody AddGroupMembersDTO data){
+        Group removed = this.groupsService.removeMembers(data.id(), data.members());
+
+        return ResponseEntity.ok(removed);
     }
 }

@@ -85,4 +85,56 @@ public class GroupsService {
 
         return null;
     }
+
+    public Group addMembers(UUID id, List<UUID> members){
+        Optional<Group> groupOpt = this.groupsRepository.findById(id);
+
+        if(groupOpt.isEmpty()){
+            throw new IllegalArgumentException("Group not found.");
+        }
+
+        Group group = groupOpt.get();
+
+        if(!this.companiesService.userHasPermission(group.getCompany().getId(), "editor")){
+            throw new IllegalArgumentException("You don't have permission to add members in this group.");
+        }
+
+        List<User> users = this.usersRepository.findAllById(members);
+
+        if (users.isEmpty()) {
+            throw new IllegalArgumentException("No users found with the provided IDs.");
+        }
+
+        Set<User> currentMembers = group.getMembers();
+        currentMembers.addAll(users);
+        group.setMembers(currentMembers);
+
+        this.groupsRepository.save(group);
+
+        return group;
+
+    }
+
+    public Group removeMembers(UUID id, List<UUID> members){
+        Optional<Group> groupOpt = this.groupsRepository.findById(id);
+
+        if(groupOpt.isEmpty()){
+            throw new IllegalArgumentException("Group not found.");
+        }
+
+        Group group = groupOpt.get();
+
+        if(!this.companiesService.userHasPermission(group.getCompany().getId(), "editor")){
+            throw new IllegalArgumentException("You don't have permission to remove members in this group.");
+        }
+
+        List<User> users = this.usersRepository.findAllById(members);
+
+        users.forEach(user -> group.getMembers().removeIf(existingMember -> existingMember.getId().equals(user.getId())));
+
+        this.groupsRepository.save(group);
+
+        return group;
+
+    }
 }
