@@ -47,4 +47,26 @@ public class GroupsService {
         return group;
 
     }
+
+    public List<Group> getAllByCompany(UUID companyId) {
+        if(!this.companiesService.userHasPermission(companyId, "editor")){
+            throw new IllegalArgumentException("You don't have permission to see groups");
+        }
+
+        return this.groupsRepository.findByCompanyId(companyId);
+    }
+
+    public Group getById(UUID id){
+        Optional<Group> group = this.groupsRepository.findById(id);
+
+        if(group.isEmpty()){
+            throw new IllegalArgumentException("Group not found.");
+        }
+
+        if(!this.companiesService.userHasPermission(group.get().getCompany().getId(), "editor")){
+            throw new IllegalArgumentException("You don't have permission to see this group");
+        }
+
+        return group.get();
+    }
 }
