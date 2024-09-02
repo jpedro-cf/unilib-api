@@ -69,4 +69,20 @@ public class GroupsService {
 
         return group.get();
     }
+
+    public Void delete(UUID id){
+        Optional<Group> group = this.groupsRepository.findById(id);
+
+        if(group.isEmpty()){
+            throw new IllegalArgumentException("Group not found.");
+        }
+
+        if(!this.companiesService.userHasPermission(group.get().getCompany().getId(), "admin")){
+            throw new IllegalArgumentException("You don't have permission to see this group");
+        }
+
+        this.groupsRepository.delete(group.get());
+
+        return null;
+    }
 }

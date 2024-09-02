@@ -47,7 +47,7 @@ public class BooksService {
             pdf = this.uploadFile(data.pdf());
         }
 
-        Boolean hasPermission = this.companiesService.userHasPermission(data.company_id(), "editor");
+        Boolean hasPermission = this.companiesService.userHasPermission(data.company_id(), "manager");
 
         if(!hasPermission) {
             throw new IllegalArgumentException("You don't have permission to create books");
