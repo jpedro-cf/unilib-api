@@ -5,14 +5,19 @@ import com.unilib.api.domain.book.BookRequestDTO;
 import com.unilib.api.domain.book.BookResponseDTO;
 import com.unilib.api.domain.category.Category;
 import com.unilib.api.domain.company.Company;
+import com.unilib.api.domain.permission.Permission;
+import com.unilib.api.domain.permission.Permissions;
+import com.unilib.api.domain.user.User;
 import com.unilib.api.repositories.BooksRepository;
 import com.unilib.api.repositories.CategoriesRepository;
 import com.unilib.api.repositories.CompaniesRepository;
+import com.unilib.api.repositories.PermissionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,7 +32,7 @@ public class BooksService {
     private CategoriesRepository categoriesRepository;
 
     @Autowired
-    private CompaniesRepository companiesRepository;
+    private CompaniesService companiesService;
 
     public Book createBook(BookRequestDTO data) {
         String imgUrl = null;
@@ -42,12 +47,13 @@ public class BooksService {
             pdf = this.uploadFile(data.pdf());
         }
 
+        Boolean hasPermission = this.companiesService.userHasPermission(data.company_id(), "editor");
 
-        Optional<Company> company = this.companiesRepository.findById(data.company_id());
-
-        if(company.isEmpty()){
-            throw new IllegalArgumentException("Company not found");
+        if(!hasPermission) {
+            throw new IllegalArgumentException("You don't have permission to create books");
         }
+
+        Company company = this.companiesService.getByID(data.company_id());
 
         Book newBook = new Book();
 
@@ -55,7 +61,7 @@ public class BooksService {
         newBook.setDescription(data.description());
         newBook.setImage(imgUrl);
         newBook.setPdf(pdf);
-        newBook.setCompany(company.get());
+        newBook.setCompany(company);
         newBook.setCreatedAt(new Date());
 
         if (data.categories().isPresent()) {
@@ -70,14 +76,15 @@ public class BooksService {
 
         this.repository.save(newBook);
 
-
         return newBook;
     }
+
     public Book getByID(UUID id){
         return this.repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Book not found"));
 
     }
+
     public List<BookResponseDTO> getBooks(String title, String sort, int page, int size){
         title = (title != null) ? title : "";
 
@@ -105,8 +112,19 @@ public class BooksService {
     }
 
     public Void deleteBook(UUID bookId){
-        this.repository.delete(this.repository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("Book not found")));
+        Optional<Book> book = this.repository.findById(bookId);
+
+        if(book.isEmpty()){
+            throw new IllegalArgumentException("Book not found");
+        }
+
+        UUID companyID = book.get().getCompany().getId();
+
+        if(!this.companiesService.userHasPermission(companyID, "manager")){
+            throw new IllegalArgumentException("You don't have permission to delete books.");
+        }
+
+        this.repository.delete(book.get());
 
        return null;
     }
