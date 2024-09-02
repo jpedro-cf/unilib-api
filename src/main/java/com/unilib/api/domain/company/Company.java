@@ -1,15 +1,17 @@
 package com.unilib.api.domain.company;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.unilib.api.domain.group.Group;
+import com.unilib.api.domain.review.Review;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Table(name = "company")
@@ -28,6 +30,10 @@ public class Company {
     private String description;
 
     private String image;
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    private Set<Group> groups;
 
     private Date createdAt;
 }
