@@ -5,6 +5,10 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+*.terraform*
+config/terraform/terraform.tfstate*
+config/volumes
+*.env
 *.key
 *.pub
 *.pem
