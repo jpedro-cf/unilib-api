@@ -26,7 +26,7 @@ public class Group {
     )
     private Set<User> members;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 }

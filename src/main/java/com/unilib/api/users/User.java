@@ -1,6 +1,7 @@
 package com.unilib.api.users;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.unilib.api.books.Borrow;
 import com.unilib.api.books.Review;
 import com.unilib.api.companies.CompanyMember;
@@ -36,9 +37,10 @@ public class User {
     private Set<Review> reviews;
 
     @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.REMOVE,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
+    @JsonManagedReference
     private Set<CompanyMember> memberships;
 
     @OneToMany(mappedBy = "user",

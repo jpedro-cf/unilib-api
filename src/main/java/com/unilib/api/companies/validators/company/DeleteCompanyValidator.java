@@ -1,5 +1,6 @@
 package com.unilib.api.companies.validators.company;
 
+import com.unilib.api.companies.Company;
 import com.unilib.api.companies.CompanyMember;
 import com.unilib.api.companies.CompanyRole;
 import com.unilib.api.companies.validators.member.CompanyMemberExist;
@@ -11,7 +12,7 @@ import com.unilib.api.shared.exceptions.ForbiddenException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeleteCompanyValidator implements Validator<CompanyDeletionValidation, Void> {
+public class DeleteCompanyValidator implements Validator<CompanyDeletionValidation, Company> {
     private final CompanyExist companyExists;
     private final CompanyMemberExist memberExists;
     
@@ -21,8 +22,8 @@ public class DeleteCompanyValidator implements Validator<CompanyDeletionValidati
     }
     
     @Override
-    public Void validate(CompanyDeletionValidation request) {
-        companyExists.validate(request.companyId());
+    public Company validate(CompanyDeletionValidation request) {
+        Company company = companyExists.validate(request.companyId());
         
         CompanyMember member = memberExists.validate(new CompanyMemberValidation(
                 request.companyId(), request.userId()));
@@ -31,6 +32,6 @@ public class DeleteCompanyValidator implements Validator<CompanyDeletionValidati
             throw new ForbiddenException("Only the owner can delete a company.");
         }
         
-        return null;
+        return company;
     }
 }

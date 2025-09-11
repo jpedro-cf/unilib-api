@@ -60,16 +60,19 @@ public class CompaniesService {
 
 
     public Company create(CompanyRequestDTO request, User user) throws Exception {
-        CompanyMember member = CompanyMember.builder()
-                .role(CompanyRole.OWNER)
-                .user(user)
-                .build();
-
         Company company = Company.builder()
                 .name(request.name())
                 .description(request.description())
-                .members(new HashSet<>(Set.of(member)))
+                .members(new HashSet<>())
                 .build();
+
+        CompanyMember member = CompanyMember.builder()
+                .role(CompanyRole.OWNER)
+                .user(user)
+                .company(company)
+                .build();
+
+        company.getMembers().add(member);
 
         if(request.image().isPresent()){
             company.setImage("images/company/" + UUID.randomUUID());
@@ -79,11 +82,7 @@ public class CompaniesService {
                     Map.of());
         }
 
-        member.setCompany(company);
-
-        companiesRepository.save(company);
-
-        return company;
+        return companiesRepository.save(company);
     }
 
     public Company update(UUID companyId, UpdateCompanyRequestDTO request, User user) throws Exception {
