@@ -2,6 +2,7 @@ package com.unilib.api.companies.http;
 
 import com.unilib.api.companies.Company;
 import com.unilib.api.companies.dto.CompanyRequestDTO;
+import com.unilib.api.companies.dto.UpdateCompanyRequestDTO;
 import com.unilib.api.companies.services.CompaniesService;
 import com.unilib.api.config.security.TokenAuthentication;
 import jakarta.validation.Valid;
@@ -25,6 +26,16 @@ public class CompaniesController {
                                           TokenAuthentication authentication) throws Exception {
 
         Company company = this.companiesService.create(data, authentication.getUser());
+
+        return ResponseEntity.ok(company);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Company> update(@PathVariable("id") UUID companyId,
+                                          @Valid @ModelAttribute UpdateCompanyRequestDTO data,
+                                          TokenAuthentication authentication) throws Exception {
+
+        Company company = this.companiesService.update(companyId, data, authentication.getUser());
 
         return ResponseEntity.ok(company);
     }

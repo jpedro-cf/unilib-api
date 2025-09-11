@@ -6,7 +6,10 @@ import com.unilib.api.companies.CompanyRole;
 import com.unilib.api.companies.dto.AddCompanyMemberDTO;
 import com.unilib.api.companies.dto.CompanyRequestDTO;
 import com.unilib.api.companies.dto.CompanyResponseDTO;
+import com.unilib.api.companies.dto.UpdateCompanyRequestDTO;
 import com.unilib.api.companies.repositories.CompanyMembersRepository;
+import com.unilib.api.companies.validators.company.UpdateCompanyValidator;
+import com.unilib.api.companies.validators.dto.CompanyUpdateValidation;
 import com.unilib.api.companies.validators.member.AddCompanyMemberValidator;
 import com.unilib.api.companies.validators.member.RemoveCompanyMemberValidator;
 import com.unilib.api.companies.validators.dto.AddMemberValidation;
@@ -77,6 +80,28 @@ public class CompaniesService {
         }
 
         member.setCompany(company);
+
+        companiesRepository.save(company);
+
+        return company;
+    }
+
+    public Company update(UUID companyId, UpdateCompanyRequestDTO request, User user) throws Exception {
+        UpdateCompanyValidator validator = validatorsFactory
+                .getValidator(UpdateCompanyValidator.class);
+
+        Company company = validator.validate(new CompanyUpdateValidation(companyId, user.getId()));
+
+        company.setName(request.name().orElseGet(company::getName));
+        company.setDescription(request.description().orElseGet(company::getDescription));
+
+        if(request.image().isPresent()){
+            company.setImage("images/company/" + UUID.randomUUID());
+
+            storage.uploadObject(company.getImage(),
+                    request.image().get().getBytes(),
+                    Map.of());
+        }
 
         companiesRepository.save(company);
 
