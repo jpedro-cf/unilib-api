@@ -23,7 +23,7 @@ public class CompanyMemberExist implements Validator<CompanyMemberValidation, Co
                 .findByCompanyIdAndUserId(request.companyId(), request.userId());
 
         if(member.isEmpty()){
-            throw new ForbiddenException("You don't belong to this company");
+            throw new ForbiddenException("User does not belong to this company");
         }
 
         return member.get();

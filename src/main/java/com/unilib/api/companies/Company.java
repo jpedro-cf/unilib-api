@@ -2,6 +2,7 @@ package com.unilib.api.companies;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.unilib.api.books.Book;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,13 @@ public class Company {
     private String description;
 
     private String image;
+
+    @OneToMany(mappedBy = "company",
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    @JsonIgnore
+    private Set<Book> books;
 
     @OneToMany(mappedBy = "company",
             fetch = FetchType.LAZY,

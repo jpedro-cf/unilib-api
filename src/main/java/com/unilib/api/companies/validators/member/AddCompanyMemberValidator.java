@@ -8,6 +8,7 @@ import com.unilib.api.companies.validators.dto.AddMemberValidation;
 import com.unilib.api.companies.validators.dto.CompanyMemberValidation;
 import com.unilib.api.shared.Validator;
 import com.unilib.api.shared.ValidatorsFactory;
+import com.unilib.api.shared.exceptions.ConflictException;
 import com.unilib.api.shared.exceptions.ForbiddenException;
 import com.unilib.api.users.validators.UserExist;
 import org.springframework.stereotype.Component;
@@ -29,6 +30,18 @@ public class AddCompanyMemberValidator implements Validator<AddMemberValidation,
         
         CompanyMember requester = memberExist.validate(new CompanyMemberValidation(
                 request.companyId(), request.userId()));
+
+        boolean alreadyExists = false;
+
+        try {
+            memberExist.validate(new CompanyMemberValidation(
+                    request.companyId(), request.memberId()));
+            alreadyExists = true;
+        } catch (Exception ignored) {  }
+
+        if(alreadyExists){
+            throw new ConflictException("This user already belongs to this company.");
+        }
 
         CompanyMember newMember = CompanyMember.builder()
                 .role(request.role())

@@ -1,6 +1,8 @@
 package com.unilib.api.companies.http;
 
 import com.unilib.api.companies.Company;
+import com.unilib.api.companies.CompanyMember;
+import com.unilib.api.companies.dto.AddCompanyMemberDTO;
 import com.unilib.api.companies.dto.CompanyRequestDTO;
 import com.unilib.api.companies.dto.UpdateCompanyRequestDTO;
 import com.unilib.api.companies.services.CompaniesService;
@@ -44,6 +46,26 @@ public class CompaniesController {
     public ResponseEntity<Void> delete(@PathVariable("id") UUID companyId,
                                        TokenAuthentication authentication){
         this.companiesService.delete(companyId, authentication.getUser());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/members")
+    public ResponseEntity<CompanyMember> addMember(@PathVariable("id") UUID companyId,
+                                                   @RequestBody @Valid AddCompanyMemberDTO request,
+                                                   TokenAuthentication authentication){
+        CompanyMember member = this.companiesService
+                .addMember(companyId,authentication.getUser(),request);
+
+        return ResponseEntity.ok(member);
+    }
+
+    @DeleteMapping("/{companyId}/members/{memberId}")
+    public ResponseEntity<Void> addMember(@PathVariable("companyId") UUID companyId,
+                                                   @PathVariable("memberId") UUID memberId,
+                                                   TokenAuthentication authentication){
+
+        this.companiesService.removeMember(companyId,authentication.getUser(), memberId);
 
         return ResponseEntity.noContent().build();
     }
