@@ -9,7 +9,7 @@ import com.unilib.api.books.dto.BorrowBookDTO;
 import com.unilib.api.books.dto.ReadBookResponse;
 import com.unilib.api.books.repositories.BooksRepository;
 import com.unilib.api.books.repositories.BorrowedBooksRepository;
-import com.unilib.api.books.validators.books.AcceptBorrowValidator;
+import com.unilib.api.books.validators.books.BorrowActionValidator;
 import com.unilib.api.books.validators.books.BorrowBookValidator;
 import com.unilib.api.books.validators.books.AddBookValidator;
 import com.unilib.api.books.validators.books.ReadBookValidator;
@@ -143,8 +143,8 @@ public class BooksService {
     }
 
     public void acceptBorrow(UUID borrowId, User user){
-        AcceptBorrowValidator validator = validatorsFactory
-                .getValidator(AcceptBorrowValidator.class);
+        BorrowActionValidator validator = validatorsFactory
+                .getValidator(BorrowActionValidator.class);
 
         Borrow borrow = validator
                 .validate(new AcceptBorrowValidation(borrowId, user.getId()));
@@ -152,5 +152,15 @@ public class BooksService {
         borrow.accept();
 
         borrowedBooksRepository.save(borrow);
+    }
+
+    public void denyBorrow(UUID borrowId, User user){
+        BorrowActionValidator validator = validatorsFactory
+                .getValidator(BorrowActionValidator.class);
+
+        Borrow borrow = validator
+                .validate(new AcceptBorrowValidation(borrowId, user.getId()));
+
+        borrowedBooksRepository.delete(borrow);
     }
 }

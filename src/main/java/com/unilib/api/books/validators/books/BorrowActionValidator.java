@@ -3,7 +3,6 @@ package com.unilib.api.books.validators.books;
 import com.unilib.api.books.Borrow;
 import com.unilib.api.books.repositories.BorrowedBooksRepository;
 import com.unilib.api.books.validators.dto.AcceptBorrowValidation;
-import com.unilib.api.companies.CompanyMember;
 import com.unilib.api.companies.validators.dto.CompanyMemberValidation;
 import com.unilib.api.companies.validators.member.CompanyMemberExist;
 import com.unilib.api.shared.Validator;
@@ -14,11 +13,11 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class AcceptBorrowValidator implements Validator<AcceptBorrowValidation, Borrow> {
+public class BorrowActionValidator implements Validator<AcceptBorrowValidation, Borrow> {
     private final BorrowedBooksRepository borrowedBooksRepository;
     private final CompanyMemberExist memberExist;
 
-    public AcceptBorrowValidator(BorrowedBooksRepository borrowedBooksRepository,
+    public BorrowActionValidator(BorrowedBooksRepository borrowedBooksRepository,
                                  ValidatorsFactory factory){
         this.borrowedBooksRepository = borrowedBooksRepository;
         this.memberExist = factory.getValidator(CompanyMemberExist.class);

@@ -57,10 +57,18 @@ public class BooksController {
         return ResponseEntity.ok(data);
     }
 
-    @PostMapping("/borrows/{id}")
+    @PutMapping("/borrows/{id}")
     public ResponseEntity<Void> acceptBorrow(@PathVariable("id") UUID borrowId,
                                              TokenAuthentication authentication) {
         this.booksService.acceptBorrow(borrowId, authentication.getUser());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/borrows/{id}")
+    public ResponseEntity<Void> denyBorrow(@PathVariable("id") UUID borrowId,
+                                             TokenAuthentication authentication) {
+        this.booksService.denyBorrow(borrowId, authentication.getUser());
 
         return ResponseEntity.noContent().build();
     }

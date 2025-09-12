@@ -5,7 +5,6 @@ import com.unilib.api.companies.CompanyMember;
 import com.unilib.api.companies.CompanyRole;
 import com.unilib.api.companies.validators.company.CompanyExist;
 import com.unilib.api.companies.validators.dto.AddMemberValidation;
-import com.unilib.api.companies.validators.dto.CompanyMemberModificationValidation;
 import com.unilib.api.companies.validators.dto.CompanyMemberValidation;
 import com.unilib.api.shared.Validator;
 import com.unilib.api.shared.ValidatorsFactory;
@@ -37,8 +36,12 @@ public class AddCompanyMemberValidator implements Validator<AddMemberValidation,
                 .company(company)
                 .build();
 
-        if(!requester.getRole().equals(CompanyRole.ADMIN)){
+        if(requester.getRole().getLevel() < CompanyRole.ADMIN.getLevel()){
             throw new ForbiddenException("You're not allowed to add a member.");
+        }
+
+        if(requester.getRole().getLevel() < request.role().getLevel()){
+            throw new ForbiddenException("You're not allowed to add this role.");
         }
 
         return newMember;
