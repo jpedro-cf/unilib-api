@@ -127,9 +127,10 @@ public class BooksService {
         List<Borrow> response = List.of();
         if(data.companyId().isPresent()){
             response = borrowedBooksRepository.findAllByCompanyId(data.companyId().get());
+        }else{
+            response = borrowedBooksRepository.getByUserId(data.user().getId());
         }
 
-        response = borrowedBooksRepository.getByUserId(data.user().getId());
 
         return response.stream()
                 .map(BorrowedBookDTO::fromEntity)
