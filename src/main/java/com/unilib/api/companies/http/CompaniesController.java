@@ -3,6 +3,7 @@ package com.unilib.api.companies.http;
 import com.unilib.api.companies.Company;
 import com.unilib.api.companies.CompanyMember;
 import com.unilib.api.companies.dto.AddCompanyMemberDTO;
+import com.unilib.api.companies.dto.CompanyMemberDTO;
 import com.unilib.api.companies.dto.CompanyRequestDTO;
 import com.unilib.api.companies.dto.UpdateCompanyRequestDTO;
 import com.unilib.api.companies.services.CompaniesService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -48,6 +50,15 @@ public class CompaniesController {
         this.companiesService.delete(companyId, authentication.getUser());
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/members")
+    public ResponseEntity<List<CompanyMemberDTO>> getMembers(@PathVariable("id") UUID companyId,
+                                                             TokenAuthentication authentication){
+        List<CompanyMemberDTO> response = this.companiesService
+                .getMembers(companyId, authentication.getUser());
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{id}/members")

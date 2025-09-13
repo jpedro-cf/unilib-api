@@ -3,20 +3,15 @@ package com.unilib.api.companies.services;
 import com.unilib.api.companies.Company;
 import com.unilib.api.companies.CompanyMember;
 import com.unilib.api.companies.CompanyRole;
-import com.unilib.api.companies.dto.AddCompanyMemberDTO;
-import com.unilib.api.companies.dto.CompanyRequestDTO;
-import com.unilib.api.companies.dto.CompanyResponseDTO;
-import com.unilib.api.companies.dto.UpdateCompanyRequestDTO;
+import com.unilib.api.companies.dto.*;
 import com.unilib.api.companies.repositories.CompanyMembersRepository;
 import com.unilib.api.companies.validators.company.UpdateCompanyValidator;
-import com.unilib.api.companies.validators.dto.CompanyUpdateValidation;
+import com.unilib.api.companies.validators.dto.*;
 import com.unilib.api.companies.validators.member.AddCompanyMemberValidator;
+import com.unilib.api.companies.validators.member.CompanyMemberExist;
 import com.unilib.api.companies.validators.member.RemoveCompanyMemberValidator;
-import com.unilib.api.companies.validators.dto.AddMemberValidation;
 import com.unilib.api.shared.ValidatorsFactory;
 import com.unilib.api.companies.validators.company.DeleteCompanyValidator;
-import com.unilib.api.companies.validators.dto.RemoveMemberValidation;
-import com.unilib.api.companies.validators.dto.CompanyDeletionValidation;
 import com.unilib.api.shared.Storage;
 import com.unilib.api.shared.exceptions.NotFoundException;
 import com.unilib.api.users.User;
@@ -114,6 +109,21 @@ public class CompaniesService {
         validator.validate(new CompanyDeletionValidation(id, user.getId()));
 
         this.companiesRepository.deleteById(id);
+    }
+
+    public List<CompanyMemberDTO> getMembers(UUID companyId, User user){
+        CompanyMemberExist validator = validatorsFactory
+                .getValidator(CompanyMemberExist.class);
+
+        validator.validate(new CompanyMemberValidation(companyId, user.getId()));
+
+        return this.companyMembersRepository.findAll()
+                .stream()
+                .map(m -> new CompanyMemberDTO(m.getId(),
+                        m.getCompany().getId(),
+                        m.getUser().getName(),
+                        m.getUser().getEmail(), m.getRole())
+        ).toList();
     }
 
     public CompanyMember addMember(UUID companyId,

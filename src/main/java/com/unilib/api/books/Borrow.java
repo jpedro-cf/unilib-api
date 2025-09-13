@@ -1,5 +1,7 @@
 package com.unilib.api.books;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.unilib.api.companies.Company;
 import com.unilib.api.shared.exceptions.ApplicationException;
 import com.unilib.api.shared.exceptions.InvalidArgumentException;
 import com.unilib.api.users.User;
@@ -20,6 +22,9 @@ public class Borrow {
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
+
+    @Column(name = "company_id", nullable = false)
+    private UUID companyId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

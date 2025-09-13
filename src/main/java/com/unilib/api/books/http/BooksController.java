@@ -2,10 +2,7 @@ package com.unilib.api.books.http;
 
 import com.unilib.api.books.Book;
 import com.unilib.api.books.Borrow;
-import com.unilib.api.books.dto.AddBookRequestDTO;
-import com.unilib.api.books.dto.BookResponseDTO;
-import com.unilib.api.books.dto.BorrowBookDTO;
-import com.unilib.api.books.dto.ReadBookResponse;
+import com.unilib.api.books.dto.*;
 import com.unilib.api.books.services.BooksService;
 import com.unilib.api.config.security.TokenAuthentication;
 import jakarta.validation.Valid;
@@ -13,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -80,6 +78,15 @@ public class BooksController {
                                                              ) {
        List<BookResponseDTO> books = this.booksService.getBooks(sort, page, size);
        return ResponseEntity.ok(books);
+    }
+
+    @GetMapping("/borrows")
+    public ResponseEntity<List<BorrowedBookDTO>> getBorrows(@RequestParam(required = false) UUID companyId,
+                                                   TokenAuthentication authentication) {
+        GetBorrowsDTO data = new GetBorrowsDTO(Optional.ofNullable(companyId), authentication.getUser());
+
+        List<BorrowedBookDTO> response = this.booksService.getBorrows(data);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")

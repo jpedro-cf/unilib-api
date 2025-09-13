@@ -3,16 +3,10 @@ package com.unilib.api.books.services;
 import com.unilib.api.books.Book;
 import com.unilib.api.books.Borrow;
 import com.unilib.api.books.BorrowStatus;
-import com.unilib.api.books.dto.AddBookRequestDTO;
-import com.unilib.api.books.dto.BookResponseDTO;
-import com.unilib.api.books.dto.BorrowBookDTO;
-import com.unilib.api.books.dto.ReadBookResponse;
+import com.unilib.api.books.dto.*;
 import com.unilib.api.books.repositories.BooksRepository;
 import com.unilib.api.books.repositories.BorrowedBooksRepository;
-import com.unilib.api.books.validators.books.BorrowActionValidator;
-import com.unilib.api.books.validators.books.BorrowBookValidator;
-import com.unilib.api.books.validators.books.AddBookValidator;
-import com.unilib.api.books.validators.books.ReadBookValidator;
+import com.unilib.api.books.validators.books.*;
 import com.unilib.api.books.validators.dto.AcceptBorrowValidation;
 import com.unilib.api.books.validators.dto.AddBookValidation;
 import com.unilib.api.books.validators.dto.BookBorrowValidation;
@@ -134,12 +128,32 @@ public class BooksService {
         Borrow data = Borrow.builder()
                 .user(user)
                 .book(book)
+                .companyId(book.getCompany().getId())
                 .status(BorrowStatus.WAITING)
                 .releaseAt(request.release())
                 .expiresAt(request.expiration())
                 .build();
 
         return borrowedBooksRepository.save(data);
+    }
+
+    public List<BorrowedBookDTO> getBorrows(GetBorrowsDTO data){
+        GetBorrowsValidator validator = validatorsFactory
+                .getValidator(GetBorrowsValidator.class);
+
+        validator.validate(data);
+
+
+        List<Borrow> response = List.of();
+        if(data.companyId().isPresent()){
+            response = borrowedBooksRepository.findAllByCompanyId(data.companyId().get());
+        }
+
+        response = borrowedBooksRepository.getByUserId(data.user().getId());
+
+        return response.stream()
+                .map(BorrowedBookDTO::fromEntity)
+                .toList();
     }
 
     public void acceptBorrow(UUID borrowId, User user){

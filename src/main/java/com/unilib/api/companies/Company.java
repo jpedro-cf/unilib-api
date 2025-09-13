@@ -3,6 +3,7 @@ package com.unilib.api.companies;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.unilib.api.books.Book;
+import com.unilib.api.books.Borrow;
 import jakarta.persistence.*;
 import lombok.*;
 
