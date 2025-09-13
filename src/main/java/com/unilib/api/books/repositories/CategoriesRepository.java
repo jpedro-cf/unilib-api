@@ -10,8 +10,10 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface CategoriesRepository extends JpaRepository<Category, UUID>, PagingAndSortingRepository<Category, UUID> {
+    Optional<Category> findByTitle(String title);
 }

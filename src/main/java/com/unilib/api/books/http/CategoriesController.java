@@ -6,6 +6,8 @@ import com.unilib.api.books.services.CategoriesService;
 import com.unilib.api.config.security.TokenAuthentication;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,17 +35,15 @@ public class CategoriesController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getByID(@PathVariable UUID id){
+    public ResponseEntity<Category> getByID(@PathVariable("id") UUID id){
         Category category = this.categoriesService.getByID(id);
 
         return ResponseEntity.ok(category);
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getMany(@RequestParam(defaultValue = "0", required = false) int page,
-                                  @RequestParam(defaultValue = "10", required = false) int size,
-                                  @RequestParam(defaultValue = "DESC", required = false) String sort){
-        List<Category> categories = this.categoriesService.getCategories(sort, page, size);
+    public ResponseEntity<Page<Category>> getAll(Pageable pageable){
+        Page<Category> categories = this.categoriesService.getCategories(pageable);
         return ResponseEntity.ok(categories);
 
     }

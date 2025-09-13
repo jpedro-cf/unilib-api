@@ -6,6 +6,8 @@ import com.unilib.api.books.dto.*;
 import com.unilib.api.books.services.BooksService;
 import com.unilib.api.config.security.TokenAuthentication;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,11 +74,8 @@ public class BooksController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookResponseDTO>> getFiltered(@RequestParam(defaultValue = "0", required = false) int page,
-                                                             @RequestParam(defaultValue = "10", required = false) int size,
-                                                             @RequestParam(defaultValue = "DESC", required = false) String sort
-                                                             ) {
-       List<BookResponseDTO> books = this.booksService.getBooks(sort, page, size);
+    public ResponseEntity<Page<Book>> getAll(Pageable pageable) {
+       Page<Book> books = this.booksService.getBooks(pageable);
        return ResponseEntity.ok(books);
     }
 

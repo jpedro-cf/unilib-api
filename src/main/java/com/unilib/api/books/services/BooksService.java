@@ -64,28 +64,8 @@ public class BooksService {
 
     }
 
-    public List<BookResponseDTO> getBooks(String sort, int page, int size){
-        Sort sortOrder = Sort.by(Sort.Direction.ASC, "createdAt");
-        if ("desc".equalsIgnoreCase(sort)) {
-            sortOrder = Sort.by(Sort.Direction.DESC, "createdAt");
-        }
-
-        Pageable pageable = PageRequest.of(page, size, sortOrder);
-
-        Page<Book> booksPage = this.booksRepository.findAll(pageable);
-
-        // Isso aq é pra no futuro retornar paginação (total_pages, total_items, etc)
-        return booksPage.map(book -> new BookResponseDTO(
-                book.getId(),
-                book.getTitle(),
-                book.getDescription(),
-                book.getImage(),
-                book.getPdf(),
-                book.getCompany(),
-                book.getReviews(),
-                book.getCategories(),
-                book.getCreatedAt()
-        )).stream().toList();
+    public Page<Book> getBooks(Pageable pageable){
+        return this.booksRepository.findAll(pageable);
     }
 
     public void deleteBook(UUID bookId, User user){

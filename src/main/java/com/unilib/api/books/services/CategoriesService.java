@@ -5,6 +5,7 @@ import com.unilib.api.books.Category;
 import com.unilib.api.books.dto.CategoryRequestDTO;
 import com.unilib.api.books.repositories.CategoriesRepository;
 import com.unilib.api.companies.CompanyRole;
+import com.unilib.api.shared.exceptions.ConflictException;
 import com.unilib.api.shared.exceptions.ForbiddenException;
 import com.unilib.api.shared.exceptions.NotFoundException;
 import com.unilib.api.users.User;
@@ -36,6 +37,11 @@ public class CategoriesService {
             throw new ForbiddenException("You can't create a category.");
         }
 
+        boolean exists = this.categoriesRepository.findByTitle(data.title()).isPresent();
+        if(exists){
+            throw new ConflictException("Category already exists.");
+        }
+
         Category newCategory = Category.builder()
                 .title(data.title())
                 .description(data.description())
@@ -52,17 +58,7 @@ public class CategoriesService {
                 .orElseThrow(() -> new NotFoundException("Category not found"));
     }
 
-    public List<Category> getCategories(String sort, int page, int size){
-        Sort sortOrder = Sort.by(Sort.Direction.ASC, "title"); // Default sorting
-        if ("desc".equalsIgnoreCase(sort)) {
-            sortOrder = Sort.by(Sort.Direction.DESC, "title");
-        }
-
-        Pageable pageable = PageRequest.of(page, size, sortOrder);
-
-        Page<Category> categoriesPage = this.categoriesRepository
-                .findAll(pageable);
-
-        return categoriesPage.getContent();
+    public Page<Category> getCategories(Pageable pageable){
+        return this.categoriesRepository.findAll(pageable);
     }
 }
