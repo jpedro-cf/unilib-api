@@ -1,11 +1,14 @@
 package com.unilib.api.users.services;
 
+import com.unilib.api.shared.exceptions.ForbiddenException;
 import com.unilib.api.users.User;
 import com.unilib.api.users.dto.RegisterRequestDTO;
 import com.unilib.api.users.repositories.UsersRepository;
 import com.unilib.api.users.validators.RegistrationValidation;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UsersService {
@@ -31,5 +34,13 @@ public class UsersService {
                 .build();
 
         return this.usersRepository.save(user);
+    }
+
+    public List<User> getAll(User user){
+        if(user.getMemberships().isEmpty()){
+            throw new ForbiddenException("You're not allowed to view users.");
+        }
+
+        return this.usersRepository.findAll();
     }
 }
