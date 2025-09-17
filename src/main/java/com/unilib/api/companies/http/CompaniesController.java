@@ -52,6 +52,14 @@ public class CompaniesController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Company> getCompany(@PathVariable("id") UUID companyId,
+                                       TokenAuthentication authentication){
+        Company company = this.companiesService.getByID(companyId);
+
+        return ResponseEntity.ok(company);
+    }
+
     @GetMapping("/{id}/members")
     public ResponseEntity<List<CompanyMemberDTO>> getMembers(@PathVariable("id") UUID companyId,
                                                              TokenAuthentication authentication){

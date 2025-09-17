@@ -68,6 +68,10 @@ public class BooksService {
         return this.booksRepository.findAll(pageable);
     }
 
+    public Page<Book> getBooksByCompany(UUID companyId, Pageable pageable){
+        return this.booksRepository.findAllByCompanyId(companyId, pageable);
+    }
+
     public void deleteBook(UUID bookId, User user){
         Book book = this.booksRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException("Book not found."));
@@ -117,24 +121,21 @@ public class BooksService {
         return borrowedBooksRepository.save(data);
     }
 
-    public List<BorrowedBookDTO> getBorrows(GetBorrowsDTO data){
+    public Page<BorrowedBookDTO> getBorrows(GetBorrowsDTO data){
         GetBorrowsValidator validator = validatorsFactory
                 .getValidator(GetBorrowsValidator.class);
 
         validator.validate(data);
 
 
-        List<Borrow> response = List.of();
+        Page<Borrow> response = Page.empty();
         if(data.companyId().isPresent()){
-            response = borrowedBooksRepository.findAllByCompanyId(data.companyId().get());
+            response = borrowedBooksRepository.findAllByCompanyId(data.companyId().get(), data.pageable());
         }else{
-            response = borrowedBooksRepository.getByUserId(data.user().getId());
+            response = borrowedBooksRepository.getByUserId(data.user().getId(), data.pageable());
         }
 
-
-        return response.stream()
-                .map(BorrowedBookDTO::fromEntity)
-                .toList();
+        return response.map(BorrowedBookDTO::fromEntity);
     }
 
     public void acceptBorrow(UUID borrowId, User user){

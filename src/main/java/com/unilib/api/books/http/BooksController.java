@@ -74,17 +74,24 @@ public class BooksController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Book>> getAll(Pageable pageable) {
-       Page<Book> books = this.booksService.getBooks(pageable);
-       return ResponseEntity.ok(books);
+    public ResponseEntity<Page<Book>> getAll(@RequestParam(required = false) UUID companyId,
+                                             Pageable pageable) {
+        if(companyId != null){
+            return ResponseEntity.ok(this.booksService.getBooksByCompany(companyId, pageable));
+        }
+
+        return ResponseEntity.ok(this.booksService.getBooks(pageable));
     }
 
     @GetMapping("/borrows")
-    public ResponseEntity<List<BorrowedBookDTO>> getBorrows(@RequestParam(required = false) UUID companyId,
+    public ResponseEntity<Page<BorrowedBookDTO>> getBorrows(@RequestParam(required = false) UUID companyId,
+                                                            Pageable pageable,
                                                    TokenAuthentication authentication) {
-        GetBorrowsDTO data = new GetBorrowsDTO(Optional.ofNullable(companyId), authentication.getUser());
+        GetBorrowsDTO data = new GetBorrowsDTO(Optional.ofNullable(companyId),
+                authentication.getUser(),
+                pageable);
 
-        List<BorrowedBookDTO> response = this.booksService.getBorrows(data);
+        Page<BorrowedBookDTO> response = this.booksService.getBorrows(data);
         return ResponseEntity.ok(response);
     }
 

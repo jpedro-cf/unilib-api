@@ -1,5 +1,6 @@
 package com.unilib.api.books.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.unilib.api.books.Book;
 import com.unilib.api.books.Borrow;
 import com.unilib.api.books.BorrowStatus;
@@ -12,7 +13,9 @@ public record BorrowedBookDTO(UUID id,
                               String username,
                               String email,
                               BorrowStatus status,
+                              @JsonProperty("release_at")
                               Instant releaseAt,
+                              @JsonProperty("expires_at")
                               Instant expiresAt) {
 
     public static BorrowedBookDTO fromEntity(Borrow entity){
