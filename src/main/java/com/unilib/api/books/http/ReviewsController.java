@@ -21,12 +21,11 @@ public class ReviewsController {
         this.reviewsService = reviewsService;
     }
 
-    @PostMapping("books/{id}")
-    public ResponseEntity<Review> create(@PathVariable("id") UUID bookId,
-                                         @RequestBody @Valid ReviewRequestDTO request,
+    @PostMapping
+    public ResponseEntity<Review> create(@RequestBody @Valid ReviewRequestDTO request,
                                          TokenAuthentication authentication){
         var review = this.reviewsService
-                .addBookReview(bookId, request, authentication.getUser());
+                .addBookReview(request, authentication.getUser());
 
         return ResponseEntity.ok(review);
     }

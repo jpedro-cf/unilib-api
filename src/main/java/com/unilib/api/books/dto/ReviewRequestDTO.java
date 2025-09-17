@@ -2,6 +2,9 @@ package com.unilib.api.books.dto;
 
 import jakarta.validation.constraints.NotNull;
 
-public record ReviewRequestDTO(@NotNull String comment,
+import java.util.UUID;
+
+public record ReviewRequestDTO(@NotNull UUID bookId,
+                               @NotNull String comment,
                                @NotNull Double rating) {
 }

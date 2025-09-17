@@ -28,7 +28,7 @@ public class ReviewValidator implements Validator<ReviewValidation, Book> {
     @Override
     public Book validate(ReviewValidation request) {
         List<Borrow> borrowed = previouslyBorrowed.validate(new BookBorrowValidation(
-                request.bookId(), request.userId()));
+                request.data().bookId(), request.userId()));
 
         boolean validBorrowStatus = borrowed.stream()
                 .anyMatch(b -> !b.getStatus().equals(BorrowStatus.WAITING));
@@ -37,7 +37,7 @@ public class ReviewValidator implements Validator<ReviewValidation, Book> {
             throw new ForbiddenException("You can't add a review to this book.");
         }
 
-        return booksRepository.findById(request.bookId())
+        return booksRepository.findById(request.data().bookId())
                 .orElseThrow(() -> new NotFoundException("Book not found."));
     }
 }

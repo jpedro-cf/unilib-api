@@ -4,5 +4,5 @@ import com.unilib.api.books.dto.ReviewRequestDTO;
 
 import java.util.UUID;
 
-public record ReviewValidation(UUID bookId, UUID userId, ReviewRequestDTO data) {
+public record ReviewValidation(UUID userId, ReviewRequestDTO data) {
 }

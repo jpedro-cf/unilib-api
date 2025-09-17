@@ -26,9 +26,9 @@ public class ReviewsService {
         this.validatorsFactory = validatorsFactory;
     }
 
-    public Review addBookReview(UUID bookId,ReviewRequestDTO request, User user){
+    public Review addBookReview(ReviewRequestDTO request, User user){
         ReviewValidator validator = validatorsFactory.getValidator(ReviewValidator.class);
-        Book book = validator.validate(new ReviewValidation(bookId, user.getId(), request));
+        Book book = validator.validate(new ReviewValidation(user.getId(), request));
 
         Review review = Review.builder()
                 .user(user)
