@@ -26,7 +26,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request, HttpServletResponse response){
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO request,
+                                                  HttpServletResponse response){
         LoginResponseDTO login = this.authService.login(request);
 
         HttpCookie cookie = ResponseCookie.from("access_token", login.accessToken())
@@ -41,6 +42,17 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<User> current(){
         return ResponseEntity.ok(this.authService.getCurrentUser());
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response){
+        HttpCookie cookie = ResponseCookie.from("access_token", "")
+                .httpOnly(true)
+                .path("/")
+                .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return ResponseEntity.noContent().build();
     }
 
 }

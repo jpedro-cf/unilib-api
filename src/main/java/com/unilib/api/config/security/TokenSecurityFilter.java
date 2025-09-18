@@ -50,6 +50,12 @@ public class TokenSecurityFilter extends OncePerRequestFilter {
         if(cookie.isEmpty()){
             return null;
         }
-        return cookie.getFirst().getValue();
+
+        String value = cookie.getFirst().getValue();
+
+        if(value.isEmpty()){
+            return null;
+        }
+        return value;
     }
 }
