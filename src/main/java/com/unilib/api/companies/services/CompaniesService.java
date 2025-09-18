@@ -117,7 +117,7 @@ public class CompaniesService {
 
         validator.validate(new CompanyMemberValidation(companyId, user.getId()));
 
-        return this.companyMembersRepository.findAll()
+        return this.companyMembersRepository.findAllByCompanyId(companyId)
                 .stream()
                 .map(m -> new CompanyMemberDTO(m.getId(),
                         m.getCompany().getId(),
