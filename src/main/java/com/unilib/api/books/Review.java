@@ -23,6 +23,7 @@ public class Review {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(columnDefinition = "text")
     private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
