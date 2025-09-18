@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -19,6 +20,11 @@ public class ReviewsController {
 
     public ReviewsController(ReviewsService reviewsService){
         this.reviewsService = reviewsService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Review>> getReviews(TokenAuthentication authentication){
+        return ResponseEntity.ok(this.reviewsService.getReviews(authentication.getUser()));
     }
 
     @PostMapping

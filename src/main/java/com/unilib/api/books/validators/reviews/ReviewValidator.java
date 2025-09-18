@@ -4,10 +4,12 @@ import com.unilib.api.books.Book;
 import com.unilib.api.books.Borrow;
 import com.unilib.api.books.BorrowStatus;
 import com.unilib.api.books.repositories.BooksRepository;
+import com.unilib.api.books.repositories.ReviewsRepository;
 import com.unilib.api.books.validators.books.PreviouslyBorrowedBooksValidator;
 import com.unilib.api.books.validators.dto.BookBorrowValidation;
 import com.unilib.api.books.validators.dto.ReviewValidation;
 import com.unilib.api.shared.Validator;
+import com.unilib.api.shared.exceptions.ConflictException;
 import com.unilib.api.shared.exceptions.ForbiddenException;
 import com.unilib.api.shared.exceptions.NotFoundException;
 import org.springframework.stereotype.Component;
@@ -18,15 +20,26 @@ import java.util.List;
 public class ReviewValidator implements Validator<ReviewValidation, Book> {
     private final PreviouslyBorrowedBooksValidator previouslyBorrowed;
     private final BooksRepository booksRepository;
+    private final ReviewsRepository reviewsRepository;
 
     public ReviewValidator(PreviouslyBorrowedBooksValidator previouslyBorrowed,
-                           BooksRepository booksRepository){
+                           BooksRepository booksRepository,
+                           ReviewsRepository reviewsRepository){
         this.previouslyBorrowed = previouslyBorrowed;
         this.booksRepository = booksRepository;
+        this.reviewsRepository = reviewsRepository;
     }
 
     @Override
     public Book validate(ReviewValidation request) {
+        boolean alreadyReviewed = this.reviewsRepository
+                .findByUserIdAndBookId(request.userId(), request.data().bookId())
+                .isPresent();
+
+        if(alreadyReviewed){
+            throw new ConflictException("You have already left a review for this book.");
+        }
+
         List<Borrow> borrowed = previouslyBorrowed.validate(new BookBorrowValidation(
                 request.data().bookId(), request.userId()));
 

@@ -13,6 +13,7 @@ import com.unilib.api.books.repositories.ReviewsRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,6 +25,10 @@ public class ReviewsService {
                           ValidatorsFactory validatorsFactory){
         this.reviewsRepository = reviewsRepository;
         this.validatorsFactory = validatorsFactory;
+    }
+
+    public List<Review> getReviews(User user){
+        return this.reviewsRepository.findAllByUserId(user.getId());
     }
 
     public Review addBookReview(ReviewRequestDTO request, User user){
@@ -42,7 +47,6 @@ public class ReviewsService {
     }
 
     public void deleteReview(UUID reviewId, User user){
-
         Review review = this.reviewsRepository.findById(reviewId)
                 .orElseThrow(() -> new NotFoundException("Review not found."));
 

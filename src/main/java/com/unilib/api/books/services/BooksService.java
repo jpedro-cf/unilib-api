@@ -10,6 +10,7 @@ import com.unilib.api.books.validators.books.*;
 import com.unilib.api.books.validators.dto.AcceptBorrowValidation;
 import com.unilib.api.books.validators.dto.AddBookValidation;
 import com.unilib.api.books.validators.dto.BookBorrowValidation;
+import com.unilib.api.books.validators.dto.UpdateBookValidation;
 import com.unilib.api.companies.validators.dto.CompanyMemberValidation;
 import com.unilib.api.companies.validators.member.CompanyMemberExist;
 import com.unilib.api.shared.Storage;
@@ -56,6 +57,35 @@ public class BooksService {
         this.booksRepository.save(newBook);
 
         return newBook;
+    }
+
+    public Book updateBook(UUID bookId, UpdateBookDTO data, User user) throws Exception {
+        UpdateBookValidator validator = validatorsFactory.getValidator(UpdateBookValidator.class);
+        Book book = validator.validate(new UpdateBookValidation(bookId,data,user));
+
+        if(data.title().isPresent()){
+            book.setTitle(data.title().get());
+        }
+        if(data.description().isPresent()){
+            book.setDescription(data.description().get());
+        }
+
+        if(data.image().isPresent()){
+            book.setImage("images/" + UUID.randomUUID());
+            storage.uploadObject(book.getImage(), data.image().get().getBytes(), Map.of());
+        }
+        if(data.pdf().isPresent()){
+            book.setPdf("pdf/" + UUID.randomUUID());
+            storage.uploadObject(book.getPdf(), data.pdf().get().getBytes(), Map.of());
+        }
+
+        if(data.categories().isEmpty()){
+            book.setCategories(new ArrayList<>());
+        }
+
+        this.booksRepository.save(book);
+
+        return book;
     }
 
     public Book getByID(UUID id){

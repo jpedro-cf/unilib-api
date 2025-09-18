@@ -33,6 +33,16 @@ public class BooksController {
         return ResponseEntity.ok(newBook);
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<Book> update(@PathVariable("id") UUID id,
+                                       @Valid @ModelAttribute UpdateBookDTO data,
+                                       TokenAuthentication authentication) throws Exception {
+
+        Book book = this.booksService.updateBook(id, data, authentication.getUser());
+
+        return ResponseEntity.ok(book);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Book> getBook(@PathVariable UUID id) {
         Book book = this.booksService.getByID(id);
