@@ -12,6 +12,7 @@ import com.unilib.api.shared.ValidatorsFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -37,6 +38,8 @@ public class AddBookValidator implements Validator<AddBookValidation, Book> {
                 .title(request.data().title())
                 .description(request.data().description())
                 .company(company)
+                .reviews(new ArrayList<>())
+                .categories(new ArrayList<>())
                 .createdAt(Instant.now())
                 .build();
 
