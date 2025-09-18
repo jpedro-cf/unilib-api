@@ -12,7 +12,7 @@ import com.unilib.api.shared.exceptions.ForbiddenException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RemoveCompanyMemberValidator implements Validator<RemoveMemberValidation, Void> {
+public class RemoveCompanyMemberValidator implements Validator<RemoveMemberValidation, CompanyMember> {
     private final CompanyExist companyExist;
     private final CompanyMemberExist memberExist;
 
@@ -21,7 +21,7 @@ public class RemoveCompanyMemberValidator implements Validator<RemoveMemberValid
         this.memberExist = factory.getValidator(CompanyMemberExist.class);
     }
 
-    public Void validate(RemoveMemberValidation request) {
+    public CompanyMember validate(RemoveMemberValidation request) {
         if(request.requesterId().equals(request.memberId())){
             throw new ConflictException("You can't remove yourself from the company.");
         }
@@ -37,7 +37,7 @@ public class RemoveCompanyMemberValidator implements Validator<RemoveMemberValid
             throw new ForbiddenException("You're not allowed to remove this member.");
         }
 
-        return null;
+        return member;
     }
 
 }

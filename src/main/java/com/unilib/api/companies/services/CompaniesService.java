@@ -116,7 +116,7 @@ public class CompaniesService {
 
         return this.companyMembersRepository.findAllByCompanyId(companyId)
                 .stream()
-                .map(m -> new CompanyMemberDTO(m.getId(),
+                .map(m -> new CompanyMemberDTO(m.getUser().getId(),
                         m.getCompany().getId(),
                         m.getUser().getName(),
                         m.getUser().getEmail(), m.getRole())
@@ -144,13 +144,13 @@ public class CompaniesService {
         RemoveCompanyMemberValidator validator = validatorsFactory
                 .getValidator(RemoveCompanyMemberValidator.class);
 
-        validator.validate(new RemoveMemberValidation(
+        CompanyMember member = validator.validate(new RemoveMemberValidation(
                 companyId,
                 memberId,
                 user.getId()
         ));
 
-        companyMembersRepository.deleteById(memberId);
+        companyMembersRepository.delete(member);
     }
 
 }
