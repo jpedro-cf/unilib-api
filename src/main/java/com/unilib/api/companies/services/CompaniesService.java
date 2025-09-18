@@ -69,13 +69,10 @@ public class CompaniesService {
 
         company.getMembers().add(member);
 
-        if(request.image().isPresent()){
-            company.setImage("images/company/" + UUID.randomUUID());
-
-            storage.uploadObject(company.getImage(),
-                    request.image().get().getBytes(),
-                    Map.of());
-        }
+        company.setImage("images/company/" + UUID.randomUUID());
+        storage.uploadObject(company.getImage(),
+                request.image().getBytes(),
+                Map.of());
 
         return companiesRepository.save(company);
     }
