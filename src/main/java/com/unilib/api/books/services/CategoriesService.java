@@ -1,6 +1,7 @@
 package com.unilib.api.books.services;
 
 
+import com.unilib.api.books.Book;
 import com.unilib.api.books.Category;
 import com.unilib.api.books.dto.CategoryRequestDTO;
 import com.unilib.api.books.repositories.CategoriesRepository;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,5 +62,23 @@ public class CategoriesService {
 
     public Page<Category> getCategories(Pageable pageable){
         return this.categoriesRepository.findAll(pageable);
+    }
+
+    public void deleteCategory(UUID categoryId, User user){
+        boolean canDelete = user.getMemberships()
+                .stream()
+                .anyMatch(m -> m.getRole().getLevel() >= CompanyRole.ADMIN.getLevel());
+        if(!canDelete){
+            throw new ForbiddenException("You can't delete this category.");
+        }
+
+        Category category = this.categoriesRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException("Category does not exist."));
+
+        for(Book book: new ArrayList<>(category.getBooks())){
+            book.getCategories().remove(category);
+        }
+
+        this.categoriesRepository.deleteById(categoryId);
     }
 }

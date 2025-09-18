@@ -48,4 +48,12 @@ public class CategoriesController {
 
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> getByID(@PathVariable("id") UUID id,
+                                        TokenAuthentication authentication){
+        this.categoriesService.deleteCategory(id, authentication.getUser());
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

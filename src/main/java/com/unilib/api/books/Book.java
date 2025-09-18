@@ -37,7 +37,7 @@ public class Book {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "book_category",
             joinColumns = @JoinColumn(name = "book_id"),
