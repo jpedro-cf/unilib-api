@@ -31,7 +31,7 @@ public class Book {
     @OneToMany(mappedBy = "book",
             cascade = CascadeType.REMOVE,
             orphanRemoval = true,
-            fetch = FetchType.LAZY)
+            fetch = FetchType.EAGER)
     private List<Review> reviews;
 
     @ManyToOne

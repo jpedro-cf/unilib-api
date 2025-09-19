@@ -9,18 +9,18 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record BorrowedBookDTO(UUID id,
-                              Book book,
+                              UUID bookId,
+                              String bookTitle,
                               String username,
                               String email,
                               BorrowStatus status,
-                              @JsonProperty("release_at")
                               Instant releaseAt,
-                              @JsonProperty("expires_at")
                               Instant expiresAt) {
 
     public static BorrowedBookDTO fromEntity(Borrow entity){
         return new BorrowedBookDTO(entity.getId(),
-                entity.getBook(),
+                entity.getBook().getId(),
+                entity.getBook().getTitle(),
                 entity.getUser().getName(),
                 entity.getUser().getEmail(),
                 entity.getStatus(),

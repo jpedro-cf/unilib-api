@@ -44,7 +44,7 @@ public class BorrowScheduler {
         logger.info("Found {} completed borrows", completed.size());
 
         try {
-            completed.forEach(b -> b.setStatus(BorrowStatus.COMPLETED));
+            completed.forEach(Borrow::complete);
             borrowedBooksRepository.saveAll(completed);
         } catch (Exception e) {
             logger.error("Error occurred while completing borrows: {}" ,e.getMessage());

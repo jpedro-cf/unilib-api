@@ -70,10 +70,10 @@ public class CompaniesController {
     }
 
     @PostMapping("/{id}/members")
-    public ResponseEntity<CompanyMember> addMember(@PathVariable("id") UUID companyId,
+    public ResponseEntity<CompanyMemberDTO> addMember(@PathVariable("id") UUID companyId,
                                                    @RequestBody @Valid AddCompanyMemberDTO request,
                                                    TokenAuthentication authentication){
-        CompanyMember member = this.companiesService
+        CompanyMemberDTO member = this.companiesService
                 .addMember(companyId,authentication.getUser(),request);
 
         return ResponseEntity.ok(member);

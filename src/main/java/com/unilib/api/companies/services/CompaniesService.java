@@ -123,7 +123,7 @@ public class CompaniesService {
         ).toList();
     }
 
-    public CompanyMember addMember(UUID companyId,
+    public CompanyMemberDTO addMember(UUID companyId,
                                    User user,
                                    AddCompanyMemberDTO request){
 
@@ -135,7 +135,11 @@ public class CompaniesService {
 
         companyMembersRepository.save(newMember);
 
-        return newMember;
+        return new CompanyMemberDTO(newMember.getUser().getId(),
+                newMember.getCompany().getId(),
+                newMember.getUser().getName(),
+                newMember.getUser().getEmail(),
+                newMember.getRole());
     }
 
     public void removeMember(UUID companyId,
