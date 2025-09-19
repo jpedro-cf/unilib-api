@@ -3,6 +3,7 @@ package com.unilib.api.users.http;
 import com.unilib.api.config.security.TokenAuthentication;
 import com.unilib.api.users.User;
 import com.unilib.api.users.dto.RegisterRequestDTO;
+import com.unilib.api.users.dto.UpdateUserDTO;
 import com.unilib.api.users.services.UsersService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,11 @@ public class UsersController {
     @GetMapping
     public ResponseEntity<List<User>> getAll(TokenAuthentication authentication){
         return ResponseEntity.ok(this.usersService.getAll(authentication.getUser()));
+    }
+
+    @PutMapping
+    public ResponseEntity<User> update(@RequestBody @Valid UpdateUserDTO data,
+                                       TokenAuthentication authentication){
+        return ResponseEntity.ok(this.usersService.update(data, authentication.getUser()));
     }
 }
