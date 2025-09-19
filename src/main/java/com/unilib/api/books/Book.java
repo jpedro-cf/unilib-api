@@ -20,8 +20,9 @@ public class Book {
 
     @Column(nullable = false)
     private String title;
-
+    @Column(nullable = false)
     private String description;
+    @Column(nullable = false)
     private String image;
 
     @Column(nullable = false)
@@ -52,6 +53,6 @@ public class Book {
     @JsonIgnore
     private List<Borrow> borrows;
 
-    @Column(name = "created_at")
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 }

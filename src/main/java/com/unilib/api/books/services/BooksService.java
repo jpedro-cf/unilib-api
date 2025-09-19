@@ -125,8 +125,10 @@ public class BooksService {
     }
 
     public Borrow borrowBook(UUID bookId, BorrowBookDTO request, User user){
-        if(request.expiration().isBefore(request.release())){
-            throw new InvalidArgumentException("Expiration date can't come before the release date.");
+        if(request.release().isPresent()){
+            if(request.expiration().isBefore(request.release().get())){
+                throw new InvalidArgumentException("Expiration date can't come before the release date.");
+            }
         }
 
         if(request.expiration().isBefore(Instant.now())){
@@ -144,7 +146,7 @@ public class BooksService {
                 .book(book)
                 .companyId(book.getCompany().getId())
                 .status(BorrowStatus.WAITING)
-                .releaseAt(request.release())
+                .releaseAt(request.release().orElse(null))
                 .expiresAt(request.expiration())
                 .build();
 

@@ -27,5 +27,6 @@ public class CompanyMember {
     private Company company;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private CompanyRole role;
 }
