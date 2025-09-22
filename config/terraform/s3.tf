@@ -1,5 +1,7 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_s3_bucket" "unilib_bucket" {
-    bucket = "unilib-bucket"
+    bucket = "unilib-bucket-${data.aws_caller_identity.current.account_id}"
 }
 
 
@@ -7,8 +9,8 @@ resource "aws_s3_bucket_public_access_block" "public_access_block" {
   bucket = aws_s3_bucket.unilib_bucket.id
 
   block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = false
+  block_public_policy     = false
+  ignore_public_acls      = true
   restrict_public_buckets = false
 }
 
@@ -27,4 +29,21 @@ resource "aws_s3_bucket_policy" "public_images_policy" {
       }
     ]
   })
+}
+
+resource "aws_s3_bucket_cors_configuration" "unilib_bucket_cors" {
+  bucket = aws_s3_bucket.unilib_bucket.id
+
+  cors_rule {
+    allowed_headers = ["*"]
+    allowed_methods = ["GET", "PUT", "POST", "DELETE", "HEAD"]
+    allowed_origins = ["http://*", "https://*"]
+    expose_headers  = ["Access-Control-Allow-Origin", "ETag"]
+    max_age_seconds = 3000
+  }
+
+  cors_rule {
+      allowed_methods = ["GET"]
+      allowed_origins = ["*"]
+  }
 }

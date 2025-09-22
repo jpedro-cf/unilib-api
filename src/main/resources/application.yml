@@ -11,14 +11,14 @@ spring:
     hibernate:
       ddl-auto: update
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migrations
 
 api:
   secrets:
     public: file:${PUBLIC_KEY}
     private: file:${PRIVATE_KEY}
-  dev: true
+  dev: ${DEV_MODE:true}
 
 aws:
   region: ${AWS_REGION:us-east-1}
