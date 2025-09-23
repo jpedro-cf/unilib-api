@@ -36,10 +36,10 @@ public class Review {
     private Book book;
 
     @Column(nullable = false)
-    @JsonSerialize(using = InstantSerializer.class)
-    @JsonDeserialize(using = InstantDeserializer.class)
     private Double rating;
 
     @Column(name = "created_at")
+    @JsonSerialize(using = InstantSerializer.class)
+    @JsonDeserialize(using = InstantDeserializer.class)
     private Instant createdAt;
 }
