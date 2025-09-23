@@ -33,6 +33,7 @@ public class AuthController {
         HttpCookie cookie = ResponseCookie.from("access_token", login.accessToken())
                 .httpOnly(true)
                 .path("/")
+                .sameSite("None")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
@@ -49,6 +50,7 @@ public class AuthController {
         HttpCookie cookie = ResponseCookie.from("access_token", "")
                 .httpOnly(true)
                 .path("/")
+                .sameSite("None")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
