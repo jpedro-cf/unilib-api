@@ -44,7 +44,6 @@ jobs:
     steps:
       - name: Deploy to EC2
         run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
           sudo docker pull ${{ vars.DOCKERHUB_REPO }}:latest
           sudo docker stop spring-boot-app || true
           sudo docker rm spring-boot-app || true
