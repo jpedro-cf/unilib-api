@@ -125,14 +125,14 @@ public class BooksService {
     }
 
     public Borrow borrowBook(UUID bookId, BorrowBookDTO request, User user){
-        if(request.release().isPresent()){
-            if(request.expiration().isBefore(request.release().get())){
-                throw new InvalidArgumentException("Expiration date can't come before the release date.");
+        if(request.release() != null){
+            if(request.expiration().isBefore(request.release())){
+                throw new InvalidArgumentException("A data de retorno não pode ser anterior à data de lançamento.");
             }
         }
 
         if(request.expiration().isBefore(Instant.now())){
-            throw new InvalidArgumentException("Expiration date can't come before the actual date.");
+            throw new InvalidArgumentException("A data de retorno não ser anterior à data de agora.");
         }
 
         BorrowBookValidator validator = validatorsFactory
@@ -146,7 +146,7 @@ public class BooksService {
                 .book(book)
                 .companyId(book.getCompany().getId())
                 .status(BorrowStatus.WAITING)
-                .releaseAt(request.release().orElse(null))
+                .releaseAt(request.release())
                 .expiresAt(request.expiration())
                 .build();
 

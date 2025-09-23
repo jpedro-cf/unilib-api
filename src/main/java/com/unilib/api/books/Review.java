@@ -2,6 +2,10 @@ package com.unilib.api.books;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.unilib.api.shared.serializers.InstantDeserializer;
+import com.unilib.api.shared.serializers.InstantSerializer;
 import com.unilib.api.users.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,6 +36,8 @@ public class Review {
     private Book book;
 
     @Column(nullable = false)
+    @JsonSerialize(using = InstantSerializer.class)
+    @JsonDeserialize(using = InstantDeserializer.class)
     private Double rating;
 
     @Column(name = "created_at")

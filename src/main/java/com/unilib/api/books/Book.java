@@ -1,6 +1,10 @@
 package com.unilib.api.books;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.unilib.api.companies.Company;
+import com.unilib.api.shared.serializers.InstantDeserializer;
+import com.unilib.api.shared.serializers.InstantSerializer;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -53,6 +57,8 @@ public class Book {
     @JsonIgnore
     private List<Borrow> borrows;
 
+    @JsonSerialize(using = InstantSerializer.class)
+    @JsonDeserialize(using = InstantDeserializer.class)
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 }

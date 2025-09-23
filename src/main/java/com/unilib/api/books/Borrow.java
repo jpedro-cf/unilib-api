@@ -1,9 +1,13 @@
 package com.unilib.api.books;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.unilib.api.companies.Company;
 import com.unilib.api.shared.exceptions.ApplicationException;
 import com.unilib.api.shared.exceptions.InvalidArgumentException;
+import com.unilib.api.shared.serializers.InstantDeserializer;
+import com.unilib.api.shared.serializers.InstantSerializer;
 import com.unilib.api.users.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -36,9 +40,13 @@ public class Borrow {
     private BorrowStatus status;
 
     @Column(name = "release_at", nullable = true)
+    @JsonSerialize(using = InstantSerializer.class)
+    @JsonDeserialize(using = InstantDeserializer.class)
     private Instant releaseAt;
 
     @Column(name = "expires_at", nullable = false)
+    @JsonSerialize(using = InstantSerializer.class)
+    @JsonDeserialize(using = InstantDeserializer.class)
     private Instant expiresAt;
 
     public void accept(){

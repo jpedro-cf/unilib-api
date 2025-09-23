@@ -36,12 +36,12 @@ public class CategoriesService {
                 .anyMatch(m -> m.getRole().getLevel() >= CompanyRole.ADMIN.getLevel());
 
         if(!canCreate){
-            throw new ForbiddenException("You can't create a category.");
+            throw new ForbiddenException("Você não tem permissão para criar uma categoria.");
         }
 
         boolean exists = this.categoriesRepository.findByTitle(data.title()).isPresent();
         if(exists){
-            throw new ConflictException("Category already exists.");
+            throw new ConflictException("Essa categoria já existe.");
         }
 
         Category newCategory = Category.builder()
@@ -57,7 +57,7 @@ public class CategoriesService {
     public Category getByID(UUID id)
     {
         return this.categoriesRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Category not found"));
+                .orElseThrow(() -> new NotFoundException("Categoria não encontrada."));
     }
 
     public Page<Category> getCategories(Pageable pageable){
@@ -69,11 +69,11 @@ public class CategoriesService {
                 .stream()
                 .anyMatch(m -> m.getRole().getLevel() >= CompanyRole.ADMIN.getLevel());
         if(!canDelete){
-            throw new ForbiddenException("You can't delete this category.");
+            throw new ForbiddenException("Você não tem permissão para deletar essa categoria.");
         }
 
         Category category = this.categoriesRepository.findById(categoryId)
-                .orElseThrow(() -> new NotFoundException("Category does not exist."));
+                .orElseThrow(() -> new NotFoundException("Categoria não existe."));
 
         for(Book book: new ArrayList<>(category.getBooks())){
             book.getCategories().remove(category);

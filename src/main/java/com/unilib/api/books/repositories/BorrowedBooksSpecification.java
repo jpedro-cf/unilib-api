@@ -1,4 +1,4 @@
-package com.unilib.api.config.jpa.specifications;
+package com.unilib.api.books.repositories;
 
 import com.unilib.api.books.Borrow;
 import com.unilib.api.books.BorrowStatus;

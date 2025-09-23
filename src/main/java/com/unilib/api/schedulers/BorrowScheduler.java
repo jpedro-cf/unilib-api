@@ -1,16 +1,13 @@
 package com.unilib.api.schedulers;
 
 import com.unilib.api.books.Borrow;
-import com.unilib.api.books.BorrowStatus;
 import com.unilib.api.books.repositories.BorrowedBooksRepository;
-import com.unilib.api.config.jpa.specifications.BorrowedBooksSpecification;
+import com.unilib.api.books.repositories.BorrowedBooksSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
-import java.time.Period;
 import java.util.List;
 
 @Component
