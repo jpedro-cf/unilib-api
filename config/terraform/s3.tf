@@ -37,13 +37,8 @@ resource "aws_s3_bucket_cors_configuration" "unilib_bucket_cors" {
   cors_rule {
     allowed_headers = ["*"]
     allowed_methods = ["GET", "PUT", "POST", "DELETE", "HEAD"]
-    allowed_origins = ["http://*", "https://*"]
+    allowed_origins = ["*"]
     expose_headers  = ["Access-Control-Allow-Origin", "ETag"]
     max_age_seconds = 3000
-  }
-
-  cors_rule {
-      allowed_methods = ["GET"]
-      allowed_origins = ["*"]
   }
 }
