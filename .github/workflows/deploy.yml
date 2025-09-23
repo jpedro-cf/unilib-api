@@ -46,26 +46,22 @@ jobs:
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
           sudo docker pull ${{ vars.DOCKERHUB_REPO }}:latest
-          sudo docker stop spring-boot-app || true
-          sudo docker rm spring-boot-app || true
+          sudo docker stop spring-boot-app 2>/dev/null || true
+          sudo docker rm spring-boot-app 2>/dev/null || true
           
           sudo docker run -d \
           --name spring-boot-app \
           -p 8080:8080 \
-          
           -e DB_USER=${{ secrets.DB_USER }} \
           -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
           -e DB_URL=${{ secrets.DB_URL }} \
-          
           -e DEV_MODE=${{ vars.DEV_MODE }} \
-          
           -e AWS_ACCESS=${{ secrets.AWS_ACCESS }} \
           -e AWS_SECRET=${{ secrets.AWS_SECRET }} \
           -e AWS_BUCKET=${{ secrets.AWS_BUCKET }} \
           -e AWS_REGION=${{ secrets.AWS_REGION }} \
-          
           -e PUBLIC_KEY_CONTENT="${{ secrets.PUBLIC_KEY }}" \
           -e PRIVATE_KEY_CONTENT="${{ secrets.PRIVATE_KEY }}" \
           -e PUBLIC_KEY=/app/keys/public.pem \
           -e PRIVATE_KEY=/app/keys/private.pem \
-          ${{ vars.DOCKERHUB_REPO }}:latest
+          "${{ vars.DOCKERHUB_REPO }}:latest"
