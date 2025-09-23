@@ -39,38 +39,33 @@ jobs:
 
   deploy:
     environment: production
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     steps:
       - name: Deploy to EC2
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
-          script: |
-            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            docker pull ${{ vars.DOCKERHUB_REPO }}:latest
-            docker stop spring-boot-app || true
-            docker rm spring-boot-app || true
-            
-            docker run -d \
-            --name spring-boot-app \
-            -p 8080:8080 \
-            
-            -e DB_USER=${{ secrets.DB_USER }} \
-            -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            -e DB_URL=${{ secrets.DB_URL }} \
-            
-            -e DEV_MODE=${{ vars.DEV_MODE }} \
-            
-            -e AWS_ACCESS=${{ secrets.AWS_ACCESS }} \
-            -e AWS_SECRET=${{ secrets.AWS_SECRET }} \
-            -e AWS_BUCKET=${{ secrets.AWS_BUCKET }} \
-            -e AWS_REGION=${{ secrets.AWS_REGION }} \
-            
-            -e PUBLIC_KEY_CONTENT="${{ secrets.PUBLIC_KEY }}" \
-            -e PRIVATE_KEY_CONTENT="${{ secrets.PRIVATE_KEY }}" \
-            -e PUBLIC_KEY=/app/keys/public.pem \
-            -e PRIVATE_KEY=/app/keys/private.pem \
-            ${{ vars.DOCKERHUB_REPO }}:latest
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker pull ${{ vars.DOCKERHUB_REPO }}:latest
+          docker stop spring-boot-app || true
+          docker rm spring-boot-app || true
+          
+          docker run -d \
+          --name spring-boot-app \
+          -p 8080:8080 \
+          
+          -e DB_USER=${{ secrets.DB_USER }} \
+          -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
+          -e DB_URL=${{ secrets.DB_URL }} \
+          
+          -e DEV_MODE=${{ vars.DEV_MODE }} \
+          
+          -e AWS_ACCESS=${{ secrets.AWS_ACCESS }} \
+          -e AWS_SECRET=${{ secrets.AWS_SECRET }} \
+          -e AWS_BUCKET=${{ secrets.AWS_BUCKET }} \
+          -e AWS_REGION=${{ secrets.AWS_REGION }} \
+          
+          -e PUBLIC_KEY_CONTENT="${{ secrets.PUBLIC_KEY }}" \
+          -e PRIVATE_KEY_CONTENT="${{ secrets.PRIVATE_KEY }}" \
+          -e PUBLIC_KEY=/app/keys/public.pem \
+          -e PRIVATE_KEY=/app/keys/private.pem \
+          ${{ vars.DOCKERHUB_REPO }}:latest
