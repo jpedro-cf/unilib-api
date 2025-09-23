@@ -28,7 +28,7 @@ public class UpdateCompanyValidator implements Validator<CompanyUpdateValidation
                 request.companyId(), request.userId()));
 
         if(!member.getRole().equals(CompanyRole.OWNER)){
-            throw new ForbiddenException("Only the owner can delete a company.");
+            throw new ForbiddenException("Apenas o dono pode atualizar a empresa.");
         }
         return company;
     }

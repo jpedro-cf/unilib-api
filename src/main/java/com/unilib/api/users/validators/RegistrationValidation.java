@@ -18,7 +18,7 @@ public class RegistrationValidation implements Validator<RegisterRequestDTO, Voi
     @Override
     public Void validate(RegisterRequestDTO request) {
         if(this.usersRepository.findByEmail(request.email()).isPresent()){
-            throw new ConflictException("E-mail already in use.");
+            throw new ConflictException("E-mail já em uso.");
         }
 
         return null;

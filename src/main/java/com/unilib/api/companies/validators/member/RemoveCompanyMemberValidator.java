@@ -23,7 +23,7 @@ public class RemoveCompanyMemberValidator implements Validator<RemoveMemberValid
 
     public CompanyMember validate(RemoveMemberValidation request) {
         if(request.requesterId().equals(request.memberId())){
-            throw new ConflictException("You can't remove yourself from the company.");
+            throw new ConflictException("Você não pode remover você mesmo da empresa.");
         }
         companyExist.validate(request.companyId());
 
@@ -34,7 +34,7 @@ public class RemoveCompanyMemberValidator implements Validator<RemoveMemberValid
                 request.companyId(), request.memberId()));
 
         if(requester.getRole().getLevel() < member.getRole().getLevel()){
-            throw new ForbiddenException("You're not allowed to remove this member.");
+            throw new ForbiddenException("Você não tem permissão para remover esse membro.");
         }
 
         return member;

@@ -21,7 +21,7 @@ public class CategoriesExist implements Validator<List<UUID>, List<Category>> {
     public List<Category> validate(List<UUID> request) {
         List<Category> categories = categoriesRepository.findAllById(request);
         if(categories.size() != request.size()){
-            throw new NotFoundException("One of the categories provided does not exist.");
+            throw new NotFoundException("Uma das categorias selecionadas não existe.");
         }
         return categories;
     }

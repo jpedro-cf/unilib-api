@@ -37,7 +37,7 @@ public class ReviewValidator implements Validator<ReviewValidation, Book> {
                 .isPresent();
 
         if(alreadyReviewed){
-            throw new ConflictException("You have already left a review for this book.");
+            throw new ConflictException("Você já fez uma review para esse livro.");
         }
 
         List<Borrow> borrowed = previouslyBorrowed.validate(new BookBorrowValidation(
@@ -47,10 +47,10 @@ public class ReviewValidator implements Validator<ReviewValidation, Book> {
                 .anyMatch(b -> !b.getStatus().equals(BorrowStatus.WAITING));
 
         if(!validBorrowStatus){
-            throw new ForbiddenException("You can't add a review to this book.");
+            throw new ForbiddenException("Você ainda não pode adicionar uma review para esse livro.");
         }
 
         return booksRepository.findById(request.data().bookId())
-                .orElseThrow(() -> new NotFoundException("Book not found."));
+                .orElseThrow(() -> new NotFoundException("Livro não encontrado."));
     }
 }

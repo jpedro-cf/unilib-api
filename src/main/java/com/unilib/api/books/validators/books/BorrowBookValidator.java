@@ -33,10 +33,10 @@ public class BorrowBookValidator implements Validator<BookBorrowValidation, Book
                 .anyMatch(b -> !b.getStatus().equals(BorrowStatus.COMPLETED));
 
         if(invalidState){
-            throw new ForbiddenException("You already have a borrowed book in progress.");
+            throw new ForbiddenException("Você já pegou esse livro emprestado. Espere o prazo terminar.");
         }
 
         return booksRepository.findById(request.bookId())
-                .orElseThrow(() -> new NotFoundException("Book not found."));
+                .orElseThrow(() -> new NotFoundException("Livro não encontrado."));
     }
 }

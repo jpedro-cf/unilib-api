@@ -30,10 +30,10 @@ public class CreateGroupValidator implements Validator<GroupValidation, Company>
                 .validate(new CompanyMemberValidation(request.companyId(), request.userId()));
 
         if(member.getRole().getLevel() < CompanyRole.ADMIN.getLevel()){
-            throw new ForbiddenException("You're not allowed to add a group.");
+            throw new ForbiddenException("Você não tem permissão para adicionar uam turma.");
         }
 
         return companiesRepository.findById(request.companyId())
-                .orElseThrow(() -> new NotFoundException("Company not found."));
+                .orElseThrow(() -> new NotFoundException("Empresa não encontrada."));
     }
 }

@@ -32,10 +32,10 @@ public class AuthService {
 
     public LoginResponseDTO login(LoginRequestDTO request) {
         User user = this.usersRepository.findByEmail(request.email())
-                .orElseThrow(() -> new ForbiddenException("Invalid e-mail or password."));
+                .orElseThrow(() -> new ForbiddenException("E-mail ou senha inválidos."));
 
         if(!passwordEncoder.matches(request.password(), user.getPassword())){
-            throw new ForbiddenException("Invalid e-mail or password.");
+            throw new ForbiddenException("E-mail ou senha inválidos.");
         }
 
         String accessToken = this.tokenService.encode(
@@ -51,7 +51,7 @@ public class AuthService {
                 .getAuthentication();
 
         if(authentication == null){
-            throw new UnauthorizedException("You're not authenticated.");
+            throw new UnauthorizedException("Você não está autenticado.");
         }
 
         return authentication.getUser();

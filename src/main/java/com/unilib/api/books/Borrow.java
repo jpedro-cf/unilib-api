@@ -51,7 +51,7 @@ public class Borrow {
 
     public void accept(){
         if(!this.status.equals(BorrowStatus.WAITING)){
-            throw new InvalidArgumentException("Invalid borrow state.");
+            throw new InvalidArgumentException("Status do empréstimo inválido.");
         }
 
         this.status = BorrowStatus.IN_PROGRESS;
@@ -59,7 +59,7 @@ public class Borrow {
 
     public void complete(){
         if(!this.status.equals(BorrowStatus.IN_PROGRESS)){
-            throw new InvalidArgumentException("Invalid borrow state.");
+            throw new InvalidArgumentException("Status do empréstimo inválido.");
         }
         this.status = BorrowStatus.COMPLETED;
     }

@@ -68,7 +68,7 @@ public class GroupsService {
                 .validate(new CompanyMemberValidation(groupId, user.getId()));
 
         if(member.getRole().getLevel() < CompanyRole.ADMIN.getLevel()){
-            throw new ForbiddenException("You're not allowed to delete this group.");
+            throw new ForbiddenException("Você não tem permissão para remover essa turma.");
         }
 
         this.groupsRepository.deleteById(groupId);
@@ -76,7 +76,7 @@ public class GroupsService {
 
     public Group addMembers(UUID groupId, List<UUID> members, User user){
         Group group = this.groupsRepository.findById(groupId)
-                .orElseThrow(() -> new NotFoundException("Group not found."));
+                .orElseThrow(() -> new NotFoundException("Turma não encontrada."));
 
         AddGroupMembersValidator validator = validatorsFactory
                 .getValidator(AddGroupMembersValidator.class);

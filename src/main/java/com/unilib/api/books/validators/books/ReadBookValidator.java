@@ -46,7 +46,7 @@ public class ReadBookValidator implements Validator<BookBorrowValidation, Book> 
                 .stream().anyMatch(b -> b.getStatus().equals(BorrowStatus.IN_PROGRESS));
 
         if(!inProgress){
-            throw new ForbiddenException("You don't have any borrowed book in progress.");
+            throw new ForbiddenException("Você não tem nenhum livro emprestado em progresso.");
         }
 
         return book;

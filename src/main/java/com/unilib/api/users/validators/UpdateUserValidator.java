@@ -27,7 +27,7 @@ public class UpdateUserValidator implements Validator<UpdateUserValidation, Void
 
             boolean emailInUse = this.usersRepository.findByEmail(newEmail).isPresent();
             if(emailInUse && !newEmail.equals(request.user().getEmail())){
-                throw new ConflictException("E-mail already in use.");
+                throw new ConflictException("E-mail já em uso.");
             }
         }
 

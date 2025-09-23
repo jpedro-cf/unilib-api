@@ -45,7 +45,7 @@ public class UsersService {
 
     public List<User> getAll(User user){
         if(user.getMemberships().isEmpty()){
-            throw new ForbiddenException("You're not allowed to view users.");
+            throw new ForbiddenException("Você não tem permissão para visualizar usuários.");
         }
 
         return this.usersRepository.findAll();

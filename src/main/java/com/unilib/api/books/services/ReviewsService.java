@@ -48,10 +48,10 @@ public class ReviewsService {
 
     public void deleteReview(UUID reviewId, User user){
         Review review = this.reviewsRepository.findById(reviewId)
-                .orElseThrow(() -> new NotFoundException("Review not found."));
+                .orElseThrow(() -> new NotFoundException("Review não encontrada."));
 
         if(!review.getUser().getId().equals(user.getId())){
-            throw new ForbiddenException("Only the user can delete his review.");
+            throw new ForbiddenException("Apenas o usuário pode deletar essa review.");
         }
 
         this.reviewsRepository.deleteById(reviewId);

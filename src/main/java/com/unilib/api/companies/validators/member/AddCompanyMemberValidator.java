@@ -40,7 +40,7 @@ public class AddCompanyMemberValidator implements Validator<AddMemberValidation,
         } catch (Exception ignored) {  }
 
         if(alreadyExists){
-            throw new ConflictException("This user already belongs to this company.");
+            throw new ConflictException("Esse usuário já é um membro dessa empresa.");
         }
 
         CompanyMember newMember = CompanyMember.builder()
@@ -50,11 +50,11 @@ public class AddCompanyMemberValidator implements Validator<AddMemberValidation,
                 .build();
 
         if(requester.getRole().getLevel() < CompanyRole.ADMIN.getLevel()){
-            throw new ForbiddenException("You're not allowed to add a member.");
+            throw new ForbiddenException("Você não tem permissão para adicionar um usuário.");
         }
 
         if(requester.getRole().getLevel() < request.role().getLevel()){
-            throw new ForbiddenException("You're not allowed to add this role.");
+            throw new ForbiddenException("Você não tem permissão para adicionar esse cargo.");
         }
 
         return newMember;
