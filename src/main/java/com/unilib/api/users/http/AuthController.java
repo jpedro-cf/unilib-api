@@ -34,6 +34,7 @@ public class AuthController {
                 .httpOnly(true)
                 .path("/")
                 .sameSite("None")
+                .secure(true)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
@@ -51,6 +52,7 @@ public class AuthController {
                 .httpOnly(true)
                 .path("/")
                 .sameSite("None")
+                .secure(true)
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
