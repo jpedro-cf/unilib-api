@@ -7,3 +7,6 @@ variable "AWS_ACCESS" {
 variable "AWS_SECRET" {
   type = string
 }
+variable "DEV_MODE" {
+  type = string
+}

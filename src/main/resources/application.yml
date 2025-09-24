@@ -1,4 +1,4 @@
-debug: false
+debug: ${DEV_MODE:false}
 spring:
   application:
     name: api
@@ -7,7 +7,7 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
   jpa:
-    show-sql: true
+    show-sql: ${DEV_MODE:false}
     hibernate:
       ddl-auto: update
   flyway:

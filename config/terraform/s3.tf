@@ -1,7 +1,7 @@
 data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket" "unilib_bucket" {
-    bucket = "unilib-bucket-${data.aws_caller_identity.current.account_id}"
+    bucket = var.DEV_MODE ? "unilib-bucket" : "unilib-bucket-${data.aws_caller_identity.current.account_id}"
 }
 
 
