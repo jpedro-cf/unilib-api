@@ -51,7 +51,7 @@ jobs:
           
           sudo docker run -d \
           --name spring-boot-app \
-          -p 8080:8080 \
+          -p 80:8080 \
           -e DB_USER=${{ secrets.DB_USER }} \
           -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
           -e DB_URL=${{ secrets.DB_URL }} \
