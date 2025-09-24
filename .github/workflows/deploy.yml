@@ -61,4 +61,4 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          sudo docker-compose --env-file ./env.list up -d
+          sudo docker compose --env-file ./env.list up -d
