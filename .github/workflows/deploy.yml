@@ -64,6 +64,10 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          sudo docker stop spring-boot-app caddy-proxy
-          sudo docker rm spring-boot-app caddy-proxy
+          sudo docker stop spring-boot-app 2>/dev/null || true
+          sudo docker rm spring-boot-app 2>/dev/null || true
+          
+          sudo docker stop caddy-proxy 2>/dev/null || true
+          sudo docker rm caddy-proxy 2>/dev/null || true
+          
           sudo docker compose --env-file ./env.list up -d
