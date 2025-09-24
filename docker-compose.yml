@@ -1,0 +1,33 @@
+services:
+  app:
+    container_name: spring-boot-app
+    image: ${DOCKERHUB_REPO}:latest
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_URL: ${DB_URL}
+      DEV_MODE: ${DEV_MODE}
+      AWS_ACCESS: ${AWS_ACCESS}
+      AWS_SECRET: ${AWS_SECRET}
+      AWS_BUCKET: ${AWS_BUCKET}
+      AWS_REGION: ${AWS_REGION}
+      PUBLIC_KEY_CONTENT: ${PUBLIC_KEY_CONTENT}
+      PRIVATE_KEY_CONTENT: ${PRIVATE_KEY_CONTENT}
+      PUBLIC_KEY: /app/keys/public.pem
+      PRIVATE_KEY: /app/keys/private.pem
+    restart: unless-stopped
+  caddy:
+    image: caddy:latest
+    container_name: caddy-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+    restart: unless-stopped

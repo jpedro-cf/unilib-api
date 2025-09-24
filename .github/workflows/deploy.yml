@@ -42,26 +42,23 @@ jobs:
     runs-on: self-hosted
     needs: build
     steps:
+      - name: Create env file
+        run: |
+          cat <<EOF > ./env.list
+          DOMAIN=${{ vars.DOMAIN }}
+          DB_USER=${{ secrets.DB_USER }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          DB_URL=${{ secrets.DB_URL }}
+          DEV_MODE=${{ vars.DEV_MODE }}
+          AWS_ACCESS=${{ secrets.AWS_ACCESS }}
+          AWS_SECRET=${{ secrets.AWS_SECRET }}
+          AWS_BUCKET=${{ secrets.AWS_BUCKET }}
+          AWS_REGION=${{ secrets.AWS_REGION }}
+          PUBLIC_KEY_CONTENT="${{ secrets.PUBLIC_KEY_CONTENT }}"
+          PRIVATE_KEY_CONTENT="${{ secrets.PRIVATE_KEY_CONTENT }}"
+          DOCKERHUB_REPO=${{ vars.DOCKERHUB_REPO }}
+          EOF
+
       - name: Deploy to EC2
         run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-          sudo docker pull ${{ vars.DOCKERHUB_REPO }}:latest
-          sudo docker stop spring-boot-app 2>/dev/null || true
-          sudo docker rm spring-boot-app 2>/dev/null || true
-          
-          sudo docker run -d \
-          --name spring-boot-app \
-          -p 80:8080 \
-          -e DB_USER=${{ secrets.DB_USER }} \
-          -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-          -e DB_URL=${{ secrets.DB_URL }} \
-          -e DEV_MODE=${{ vars.DEV_MODE }} \
-          -e AWS_ACCESS=${{ secrets.AWS_ACCESS }} \
-          -e AWS_SECRET=${{ secrets.AWS_SECRET }} \
-          -e AWS_BUCKET=${{ secrets.AWS_BUCKET }} \
-          -e AWS_REGION=${{ secrets.AWS_REGION }} \
-          -e PUBLIC_KEY_CONTENT="${{ secrets.PUBLIC_KEY_CONTENT }}" \
-          -e PRIVATE_KEY_CONTENT="${{ secrets.PRIVATE_KEY_CONTENT }}" \
-          -e PUBLIC_KEY=/app/keys/public.pem \
-          -e PRIVATE_KEY=/app/keys/private.pem \
-          "${{ vars.DOCKERHUB_REPO }}:latest"
+          sudo docker-compose --env-file ./env.list up -d
