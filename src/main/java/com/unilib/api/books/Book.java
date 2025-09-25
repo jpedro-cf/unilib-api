@@ -24,8 +24,11 @@ public class Book {
 
     @Column(nullable = false)
     private String title;
-    @Column(columnDefinition = "text",nullable = false)
+
+    @Lob
+    @Column(nullable = false)
     private String description;
+
     @Column(nullable = false)
     private String image;
 

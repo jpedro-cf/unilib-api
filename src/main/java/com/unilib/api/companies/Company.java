@@ -22,7 +22,8 @@ public class Company {
     @Column(nullable = false)
     private String name;
 
-    @Column(columnDefinition = "text", nullable = false)
+    @Lob
+    @Column(nullable = false)
     private String description;
 
     @Column(nullable = false)
