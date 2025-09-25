@@ -22,7 +22,7 @@ public class Company {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "text", nullable = false)
     private String description;
 
     @Column(nullable = false)
