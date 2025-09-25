@@ -35,6 +35,7 @@ public class AuthController {
                 .path("/")
                 .sameSite("None")
                 .secure(true)
+                .domain("jpedro-cf.github.io")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
@@ -53,6 +54,7 @@ public class AuthController {
                 .path("/")
                 .sameSite("None")
                 .secure(true)
+                .domain("jpedro-cf.github.io")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
