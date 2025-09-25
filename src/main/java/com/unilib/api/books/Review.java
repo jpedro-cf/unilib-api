@@ -27,8 +27,7 @@ public class Review {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Lob
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
